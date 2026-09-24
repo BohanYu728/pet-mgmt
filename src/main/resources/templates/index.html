@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head><title>宠物管家 - 用心守护每一只宠物</title></head>
+<body>
+<div layout:fragment="content">
+<div class="hero">
+    <div class="container text-center">
+        <h1 class="mb-3">
+            <span class="d-block mb-2" style="font-size:0.45em;opacity:0.6;font-weight:500">
+                <i class="bi bi-heart-fill me-1" style="color:var(--accent)"></i>用心守护每一只宠物
+            </span>
+            让宠物管理变得简单温暖
+        </h1>
+        <p class="lead mt-3 mb-4">品种识别 · 情绪分析 · 健康追踪 · 智能提醒 — 一站式宠物管家</p>
+        <div class="mt-4">
+            <a href="/auth/register" class="btn btn-light btn-lg me-3 px-4 fw-bold"><i class="bi bi-person-plus me-2"></i>免费注册</a>
+            <a href="/auth/login" class="btn btn-outline-light btn-lg px-4"><i class="bi bi-box-arrow-in-right me-2"></i>登录</a>
+        </div>
+    </div>
+</div>
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5"><div class="col"><h2 class="fw-bold">核心功能</h2><p class="text-muted">六大智能模块，全面守护宠物健康</p></div></div>
+        <div class="row g-4">
+            <div class="col-md-4"><div class="card h-100 border-0 shadow-sm"><div class="card-body text-center p-4"><div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex p-3 mb-3"><i class="bi bi-search fs-2 text-primary"></i></div><h5>AI品种识别</h5><p class="text-muted small">上传宠物照片，AI智能识别品种</p></div></div></div>
+            <div class="col-md-4"><div class="card h-100 border-0 shadow-sm"><div class="card-body text-center p-4"><div class="rounded-circle bg-success bg-opacity-10 d-inline-flex p-3 mb-3"><i class="bi bi-emoji-smile fs-2 text-success"></i></div><h5>情绪分析</h5><p class="text-muted small">分析宠物情绪，获取专业安抚建议</p></div></div></div>
+            <div class="col-md-4"><div class="card h-100 border-0 shadow-sm"><div class="card-body text-center p-4"><div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex p-3 mb-3"><i class="bi bi-clipboard2-heart fs-2 text-warning"></i></div><h5>健康报告</h5><p class="text-muted small">ML模型评估健康评分，风险分析</p></div></div></div>
+            <div class="col-md-4"><div class="card h-100 border-0 shadow-sm"><div class="card-body text-center p-4"><div class="rounded-circle bg-info bg-opacity-10 d-inline-flex p-3 mb-3"><i class="bi bi-bell fs-2 text-info"></i></div><h5>智能提醒</h5><p class="text-muted small">疫苗/驱虫/体检自动提醒</p></div></div></div>
+            <div class="col-md-4"><div class="card h-100 border-0 shadow-sm"><div class="card-body text-center p-4"><div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex p-3 mb-3"><i class="bi bi-chat-dots fs-2 text-danger"></i></div><h5>在线问诊</h5><p class="text-muted small">AI症状分析，紧急程度判断</p></div></div></div>
+            <div class="col-md-4"><div class="card h-100 border-0 shadow-sm"><div class="card-body text-center p-4"><div class="rounded-circle d-inline-flex p-3 mb-3" style="background:#7c3aed20"><i class="bi bi-shop fs-2" style="color:#7c3aed"></i></div><h5>宠物商城</h5><p class="text-muted small">AI智能推荐，一站式购物</p></div></div></div>
+        </div>
+    </div>
+</section>
+</div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>提醒</title></head>
+<body><div layout:fragment="content"><div class="container py-4">
+<h2 class="mb-4"><i class="bi bi-bell me-2"></i>我的提醒</h2>
+<div id="reminders"><div class="text-center py-5"><div class="spinner-border"></div></div></div>
+</div>
+<script th:inline="javascript">const T=getToken();
+fetch('/api/reminders/unread',{headers:{'Authorization':'Bearer '+T}}).then(r=>r.json()).then(d=>{
+    const el=document.getElementById('reminders');
+    if(!d.reminders||d.reminders.length===0){el.innerHTML='<div class="text-center py-5 text-muted"><i class="bi bi-bell-slash fs-1 d-block mb-2"></i>暂无提醒，一切安好！</div>';return;}
+    el.innerHTML=`<div class="list-group">${d.reminders.map(r=>`<div class="list-group-item d-flex justify-content-between align-items-center"><div><h6 class="mb-1">${r.title}</h6><small class="text-muted">${r.reminder_date} · ${r.pet_name||''}</small></div><span class="badge bg-warning">待处理</span></div>`).join('')}</div>`;
+});</script></div></body></html>

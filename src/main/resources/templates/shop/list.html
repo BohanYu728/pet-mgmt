@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>宠物商城</title></head>
+<body><div layout:fragment="content"><div class="container py-4">
+<h2 class="mb-4"><i class="bi bi-shop me-2"></i>宠物商城</h2>
+<div class="row g-3 mb-4"><div class="col-auto"><select id="speciesFilter" class="form-select"><option value="">全部种类</option><option value="dog">狗狗专用</option><option value="cat">猫咪专用</option><option value="both">猫狗通用</option></select></div><div class="col-auto"><select id="categoryFilter" class="form-select"><option value="">全部分类</option><option value="food">宠物食品</option><option value="toy">宠物玩具</option></select></div></div>
+<div class="row g-4" id="list"><div class="col-12 text-center py-5"><div class="spinner-border"></div></div></div>
+</div>
+<script th:inline="javascript">const T=getToken();
+function loadProducts(species,category){
+    let url='/api/shop/api/products?page=1';
+    if(species)url+='&species='+species; if(category)url+='&category='+category;
+    fetch(url).then(r=>r.json()).then(d=>{
+        document.getElementById('list').innerHTML=d.items.map(p=>{
+            const img=p.image ? `<img src="/${p.image}" class="card-img-top" style="height:180px;object-fit:cover" onerror="this.src=''" alt="${p.name}">` : `<div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height:180px"><i class="bi ${p.category==='food'?'bi-egg-fried':'bi-puzzle'} fs-1 text-muted"></i></div>`;
+            return `<div class="col-md-3"><div class="card h-100 border-0 shadow-sm"><div class="position-relative">${img}<span class="badge position-absolute top-0 end-0 m-2 ${p.category==='food'?'bg-success':'bg-info'}">${p.category_display}</span></div><div class="card-body"><h6 class="card-title">${p.name}</h6><p class="text-muted small mb-2">${p.target_species_display} · 库存:${p.stock}</p><div class="d-flex justify-content-between align-items-center"><span class="fw-bold fs-5 text-danger">¥${p.price.toFixed(2)}</span><button class="btn btn-outline-primary btn-sm" onclick="addCart(${p.id})"><i class="bi bi-cart-plus"></i></button></div></div></div></div>`;
+        }).join('');
+    });
+}
+loadProducts('','');
+document.getElementById('speciesFilter').onchange=function(){loadProducts(this.value,document.getElementById('categoryFilter').value)};
+document.getElementById('categoryFilter').onchange=function(){loadProducts(document.getElementById('speciesFilter').value,this.value)};
+async function addCart(pid){const r=await fetch('/api/shop/api/cart',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+T},body:JSON.stringify({product_id:pid,quantity:1})});const j=await r.json();alert(j.message||j.error);}
+function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}</script></div></body></html>

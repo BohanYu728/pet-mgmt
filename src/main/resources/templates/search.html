@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}搜索 - 宠物管家{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Search bar -->
+            <form class="mb-4" action="{{ url_for('main.search') }}" method="GET">
+                <div class="input-group input-group-lg">
+                    <input type="search" name="q" class="form-control" value="{{ query }}"
+                           placeholder="搜索宠物名称、品种、健康记录..."
+                           autofocus required>
+                    <button class="btn btn-primary px-4" type="submit">
+                        <i class="bi bi-search me-1"></i> 搜索
+                    </button>
+                </div>
+            </form>
+
+            {% if query %}
+            <!-- Pet Results -->
+            <h6 class="fw-bold mb-3"><i class="bi bi-house-heart me-1"></i>宠物 ({{ pets|length }})</h6>
+            {% if pets %}
+            <div class="row g-3 mb-4">
+                {% for pet in pets %}
+                <div class="col-md-6">
+                    <a href="{{ url_for('pet.detail_page', pet_id=pet.id) }}" class="text-decoration-none">
+                        <div class="card">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                {% if pet.avatar %}
+                                <img src="{{ url_for('static', filename=pet.avatar) }}" class="rounded-circle" style="width:56px;height:56px;object-fit:cover">
+                                {% else %}
+                                <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center" style="width:56px;height:56px;font-size:1.5rem">
+                                    <i class="bi bi-heart-fill {{ 'text-primary' if pet.species=='dog' else 'text-danger' }}"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <div class="fw-bold text-dark">{{ pet.name }}</div>
+                                    <small class="text-muted">{{ pet.breed or pet.species }} · {{ pet.age_display or '-' }}</small>
+                                </div>
+                                <i class="bi bi-chevron-right text-muted ms-auto"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-3 text-muted small">未找到匹配的宠物</div>
+            {% endif %}
+
+            <!-- Record Results -->
+            <h6 class="fw-bold mb-3 mt-4"><i class="bi bi-clipboard2-pulse me-1"></i>健康记录 ({{ records|length }})</h6>
+            {% if records %}
+            <div class="list-group mb-4">
+                {% for r in records %}
+                <a href="{{ url_for('pet.detail_page', pet_id=r.pet_id) }}" class="list-group-item list-group-item-action">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="fw-bold">{{ r.title }}</span>
+                            <small class="text-muted ms-2">{{ r.record_type }} · {{ r.record_date }}</small>
+                        </div>
+                        <small class="text-muted">{{ r.pet.name if r.pet else '' }}</small>
+                    </div>
+                    {% if r.description %}<small class="text-muted">{{ r.description[:80] }}</small>{% endif %}
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-3 text-muted small">未找到匹配的健康记录</div>
+            {% endif %}
+
+            {% if not pets and not records %}
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-search" style="font-size:3rem"></i>
+                <p class="mt-3">未找到 "{{ query }}" 的相关结果</p>
+                <small>试试其他关键词，如宠物名字、品种、健康记录标题等</small>
+            </div>
+            {% endif %}
+
+            {% else %}
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-search" style="font-size:4rem"></i>
+                <p class="mt-3">输入关键词开始搜索</p>
+                <small>可搜索宠物名称、品种、健康记录标题和描述</small>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>添加宠物</title></head>
+<body><div layout:fragment="content"><div class="container py-4"><div class="row justify-content-center"><div class="col-lg-6"><div class="card border-0 shadow-sm"><div class="card-body p-4">
+<h3 class="mb-4"><i class="bi bi-plus-circle me-2"></i>添加宠物</h3><div id="alert" class="alert d-none"></div>
+<form id="pf"><div class="mb-3"><label class="form-label">名字 *</label><input name="name" class="form-control" required></div>
+<div class="mb-3"><label class="form-label">种类</label><select name="species" class="form-select"><option value="dog">狗狗</option><option value="cat">猫咪</option></select></div>
+<div class="mb-3"><label class="form-label">品种</label><input name="breed" class="form-control" placeholder="如：金毛、英短"></div>
+<div class="mb-3"><label class="form-label">性别</label><select name="gender" class="form-select"><option value="unknown">未知</option><option value="male">公</option><option value="female">母</option></select></div>
+<div class="row g-3"><div class="col"><label class="form-label">体重 (kg)</label><input name="weight" type="number" step="0.1" class="form-control"></div><div class="col"><label class="form-label">颜色</label><input name="color" class="form-control"></div></div>
+<div class="mb-3 mt-3"><label class="form-label">出生日期</label><input name="birth_date" type="date" class="form-control"></div>
+<div class="mb-3"><label class="form-label">描述</label><textarea name="description" class="form-control" rows="3"></textarea></div>
+<button type="submit" class="btn btn-primary w-100"><i class="bi bi-check-lg me-1"></i>保存</button></form>
+</div></div></div></div></div>
+<script th:inline="javascript">const T=getToken();
+document.getElementById('pf').addEventListener('submit',async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));
+const r=await fetch('/api/pets',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+T},body:JSON.stringify(d)});const j=await r.json();
+if(j.error){const a=document.getElementById('alert');a.className='alert alert-danger';a.textContent=j.error;a.classList.remove('d-none');}else location.href='/pets';});
+function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}</script></div></body></html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head><title>控制台</title></head>
+<body><div layout:fragment="content"><div class="container py-4">
+<div class="d-flex justify-content-between align-items-center mb-4"><h2 class="fw-bold mb-0"><i class="bi bi-speedometer2 me-2"></i>控制台</h2><a href="/pets/add" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>添加宠物</a></div>
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card border-0 shadow-sm bg-primary bg-opacity-10"><div class="card-body text-center"><div class="fs-2 fw-bold text-primary" th:text="${petCount}">0</div><div class="small text-muted">我的宠物</div></div></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm bg-success bg-opacity-10"><div class="card-body text-center"><div class="fs-2 fw-bold text-success" id="recordCount">-</div><div class="small text-muted">健康记录</div></div></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm bg-warning bg-opacity-10"><div class="card-body text-center"><div class="fs-2 fw-bold text-warning" id="reminderCount">0</div><div class="small text-muted">本周提醒</div></div></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm bg-info bg-opacity-10"><div class="card-body text-center"><div class="fs-2 fw-bold text-info" id="aiCount">-</div><div class="small text-muted">AI分析</div></div></div></div>
+</div>
+<div class="card border-0 shadow-sm mb-4"><div class="card-header bg-white border-0 pt-3"><h5 class="mb-0"><i class="bi bi-house-heart me-2"></i>我的宠物</h5></div>
+<div class="card-body"><div class="row g-3" th:if="${pets != null && !pets.isEmpty()}">
+    <div class="col-md-3" th:each="pet : ${pets}"><div class="card h-100 border shadow-sm"><div class="card-body text-center">
+    <th:block th:if="${pet.avatar != null}"><img th:src="@{'/'+${pet.avatar}}" class="rounded-circle mb-2" style="width:64px;height:64px;object-fit:cover" onerror="this.style.display='none'"></th:block>
+    <div th:unless="${pet.avatar != null}" class="rounded-circle bg-primary bg-opacity-10 d-inline-flex p-3 mb-2"><i class="bi fs-3" th:classappend="${pet.species == 'dog'} ? 'bi-dog text-warning' : 'bi-cat text-info'"></i></div>
+    <h6 th:text="${pet.name}" class="mb-1">宠物名</h6>
+    <p class="text-muted small mb-0" th:text="${pet.breed != null ? pet.breed : '未知品种'}">品种</p>
+    <p class="text-muted small"><span th:if="${pet.ageDisplay != null}" th:text="${pet.ageDisplay}">年龄</span><span th:unless="${pet.ageDisplay != null}" th:text="${pet.age != null ? pet.age+'岁' : ''}">年龄</span><span th:if="${pet.weight != null}"> · <span th:text="${pet.weight}">0</span>kg</span></p>
+    <a th:href="@{/pets/{id}(id=${pet.id})}" class="btn btn-outline-primary btn-sm">查看详情</a></div></div></div>
+</div><div th:unless="${pets != null && !pets.isEmpty()}" class="text-center py-4 text-muted"><i class="bi bi-inbox fs-2 d-block mb-2"></i><p>还没有添加宠物，<a href="/pets/add">去添加</a></p></div></div></div>
+</div>
+<script th:inline="javascript">fetch('/api/stats',{headers:{'Authorization':'Bearer '+(getToken()||'')}}).then(r=>r.json()).then(d=>{if(d.total_records)document.getElementById('recordCount').textContent=d.total_records;if(d.ai_analyses)document.getElementById('aiCount').textContent=d.ai_analyses;}).catch(()=>{});
+function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1];}</script></div></body></html>

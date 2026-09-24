@@ -1,0 +1,29 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>个人中心</title></head>
+<body><div layout:fragment="content"><div class="container py-4"><div id="app"><div class="text-center py-5"><div class="spinner-border"></div></div></div></div>
+<script th:inline="javascript">const T=getToken();
+fetch('/auth/profile',{headers:{'Authorization':'Bearer '+T}}).then(r=>r.json()).then(d=>{
+const u=d.user;
+document.getElementById('app').innerHTML=`<div class="row"><div class="col-lg-4"><div class="card border-0 shadow-sm mb-4"><div class="card-body text-center p-4">
+<div class="mb-3">${u.avatar?`<img src="/${u.avatar}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover" onerror="this.style.display='none'">`:`<div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center" style="width:100px;height:100px"><i class="bi bi-person fs-1 text-primary"></i></div>`}</div>
+<h4>${u.username}</h4><p class="text-muted">${u.email}</p>
+<span class="badge ${u.role==='admin'?'bg-danger':u.role==='merchant'?'bg-warning':'bg-primary'}">${u.role==='admin'?'管理员':u.role==='merchant'?'商户':'用户'}</span>
+${u.store_name?`<p class="mt-2 mb-0 small text-muted"><i class="bi bi-shop me-1"></i>${u.store_name}</p>`:''}
+<p class="mt-2 mb-0"><input type="file" id="avatarInput" accept="image/*" style="display:none"><button class="btn btn-outline-primary btn-sm" onclick="document.getElementById('avatarInput').click()"><i class="bi bi-camera me-1"></i>更换头像</button></p></div></div></div>
+<div class="col-lg-8"><div class="card border-0 shadow-sm mb-4"><div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-person-lines-fill me-2"></i>个人信息</h5></div><div class="card-body">
+<div id="profileAlert" class="alert d-none py-2"></div>
+<form id="profileForm"><div class="row g-3"><div class="col-md-6"><label class="form-label small">用户名</label><input name="username" class="form-control" value="${u.username||''}"></div><div class="col-md-6"><label class="form-label small">邮箱</label><input name="email" type="email" class="form-control" value="${u.email||''}"></div><div class="col-md-6"><label class="form-label small">手机号</label><input name="phone" class="form-control" value="${u.phone||''}"></div><div class="col-md-6"><label class="form-label small">角色</label><input class="form-control" value="${u.role==='admin'?'管理员':u.role==='merchant'?'商户':'用户'}" disabled></div></div><button type="submit" class="btn btn-primary mt-3"><i class="bi bi-check-lg me-1"></i>保存修改</button></form></div></div>
+<div class="card border-0 shadow-sm"><div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-lock me-2"></i>修改密码</h5></div><div class="card-body">
+<div id="pwAlert" class="alert d-none py-2"></div>
+<form id="pwForm"><div class="row g-3"><div class="col-md-4"><label class="form-label small">原密码</label><input name="old_password" type="password" class="form-control" required></div><div class="col-md-4"><label class="form-label small">新密码</label><input name="new_password" type="password" class="form-control" required minlength="6"></div><div class="col-md-4 d-flex align-items-end"><button type="submit" class="btn btn-outline-primary"><i class="bi bi-shield-check me-1"></i>修改密码</button></div></div></form></div></div></div></div>`;
+// Profile update
+document.getElementById('profileForm').addEventListener('submit',async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));
+const r=await fetch('/auth/profile',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+T},body:JSON.stringify(d)});const j=await r.json();
+const a=document.getElementById('profileAlert');a.className=j.error?'alert alert-danger py-2':'alert alert-success py-2';a.textContent=j.message||j.error;a.classList.remove('d-none');});
+// Password change
+document.getElementById('pwForm').addEventListener('submit',async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));
+const r=await fetch('/auth/password',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+T},body:JSON.stringify(d)});const j=await r.json();
+const a=document.getElementById('pwAlert');a.className=j.error?'alert alert-danger py-2':'alert alert-success py-2';a.textContent=j.message||j.error;a.classList.remove('d-none');});
+// Avatar upload
+document.getElementById('avatarInput').onchange=async function(){const f=this.files[0];if(!f)return;const fd=new FormData();fd.append('avatar',f);const r=await fetch('/auth/avatar',{method:'POST',headers:{'Authorization':'Bearer '+T},body:fd});const j=await r.json();j.message?location.reload():alert(j.error);};
+});
+function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}</script></div></body></html>

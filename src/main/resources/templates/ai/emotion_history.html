@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}{{ pet.name }} - 情绪历史 - 宠物管家{% endblock %}
+{% block extra_css %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="page-header d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">
+            <a href="{{ url_for('pet.detail_page', pet_id=pet.id) }}" class="text-decoration-none" style="color:inherit">{{ pet.name }}</a>
+            <i class="bi bi-chevron-right mx-2 small text-muted"></i>
+            <span class="fw-normal text-muted">情绪历史</span>
+        </h4>
+        <div>
+            <select id="petSwitch" class="form-select form-select-sm d-inline-block" style="width:auto" onchange="location.href='/ai/emotion/history/' + this.value">
+                {% for p in pets %}
+                <option value="{{ p.id }}" {{ 'selected' if p.id == pet.id else '' }}>{{ p.name }}</option>
+                {% endfor %}
+            </select>
+            <a href="{{ url_for('ai.emotion_page') }}" class="btn btn-warning btn-sm ms-2">
+                <i class="bi bi-plus-lg"></i> 新分析
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">情绪趋势</div>
+                <div class="card-body">
+                    <canvas id="trendChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">情绪分布</div>
+                <div class="card-body">
+                    <canvas id="pieChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">情绪记录列表</div>
+        <div class="list-group list-group-flush">
+            {% if history %}
+            {% for h in history %}
+            <div class="list-group-item d-flex align-items-center">
+                <span class="me-3" style="font-size:1.5rem">
+                    {% set icons = {'happy':'bi-emoji-smile-fill text-success','relaxed':'bi-emoji-smile text-info','alert':'bi-emoji-neutral text-warning','anxious':'bi-emoji-frown text-warning','scared':'bi-emoji-frown-fill text-danger','tired':'bi-emoji-neutral-fill text-secondary','sad':'bi-emoji-tear-fill text-purple'} %}
+                    <i class="bi {{ icons.get(h.emotion, 'bi-emoji-expressionless text-muted') }}" style="font-size:1.5rem"></i>
+                </span>
+                <div class="flex-grow-1">
+                    <div>{{ h.emotion }} <small class="text-muted">置信度 {{ (h.confidence|string + '%') if h.confidence else '-' }}</small></div>
+                    {% if h.comfort_advice %}
+                    <small class="text-muted">{{ h.comfort_advice[:80] }}...</small>
+                    {% endif %}
+                </div>
+                <small class="text-muted">{{ h.created_at }}</small>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="list-group-item text-center text-muted py-4">暂无情绪记录</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+const emotionColors = {
+    'happy': '#28a745', 'relaxed': '#17a2b8', 'alert': '#ffc107',
+    'anxious': '#fd7e14', 'scared': '#dc3545', 'tired': '#6c757d', 'sad': '#6f42c1'
+};
+const emotionLabels = {
+    'happy': '开心', 'relaxed': '放松', 'alert': '警惕',
+    'anxious': '焦虑', 'scared': '害怕', 'tired': '疲惫', 'sad': '伤心'
+};
+
+apiRequest('/ai/emotion/data/{{ pet.id }}')
+    .then(data => {
+        if (!data || data.length === 0) return;
+
+        // Trend chart
+        const reversed = [...data].reverse();
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: reversed.map(d => d.created_at),
+                datasets: [{
+                    label: '情绪置信度',
+                    data: reversed.map(d => d.confidence),
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99,102,241,0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: reversed.map(d => emotionColors[d.emotion] || '#999'),
+                    pointRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => `情绪: ${emotionLabels[reversed[ctx.dataIndex].emotion] || reversed[ctx.dataIndex].emotion} | 置信度: ${ctx.raw}%`
+                        }
+                    }
+                },
+                scales: {
+                    y: { min: 0, max: 100, title: { display: true, text: '置信度 %' } }
+                }
+            }
+        });
+
+        // Pie chart
+        const counts = {};
+        data.forEach(d => { counts[d.emotion] = (counts[d.emotion] || 0) + 1; });
+        new Chart(document.getElementById('pieChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(counts).map(e => emotionLabels[e] || e),
+                datasets: [{
+                    data: Object.values(counts),
+                    backgroundColor: Object.keys(counts).map(e => emotionColors[e] || '#999'),
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { padding: 10, usePointStyle: true } }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

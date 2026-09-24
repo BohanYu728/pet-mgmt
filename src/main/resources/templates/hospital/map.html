@@ -1,0 +1,12 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>附近医院</title></head>
+<body><div layout:fragment="content"><div class="container py-4"><h2 class="mb-4"><i class="bi bi-geo-alt me-2"></i>附近宠物医院</h2>
+<div class="row g-3" id="list"><div class="col-12 text-center py-5"><div class="spinner-border"></div></div></div></div>
+<script th:inline="javascript">
+fetch('/api/hospitals/api').then(r=>r.json()).then(d=>{
+    document.getElementById('list').innerHTML=d.hospitals.map(h=>`<div class="col-md-6"><div class="card border shadow-sm"><div class="card-body">
+        <h5>${h.name}</h5><p class="text-muted small"><i class="bi bi-geo-alt me-1"></i>${h.address}</p>
+        <p class="text-muted small"><i class="bi bi-telephone me-1"></i>${h.phone||'暂无'} · <i class="bi bi-clock me-1"></i>${h.hours||'未知'}</p>
+        <p class="text-muted small"><i class="bi bi-tag me-1"></i>${h.services||''}</p>
+        ${h.avg_rating?`<span class="badge bg-warning"><i class="bi bi-star-fill me-1"></i>${h.avg_rating} (${h.review_count}条评价)</span>`:''}
+    </div></div></div>`).join('');
+});</script></div></body></html>

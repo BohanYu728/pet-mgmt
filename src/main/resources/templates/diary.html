@@ -1,0 +1,19 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>宠物日记</title></head>
+<body><div layout:fragment="content"><div class="container py-4">
+<h2 class="mb-4"><i class="bi bi-journal-text me-2"></i>宠物日记</h2>
+<div class="mb-4"><select id="petSelect" class="form-select w-auto d-inline-block"><option value="">选择宠物...</option></select></div>
+<div id="logs"><div class="text-center py-5 text-muted"><i class="bi bi-book fs-1 d-block mb-2"></i>选择宠物查看日记</div></div>
+</div>
+<script th:inline="javascript">const T=getToken();
+fetch('/api/pets?page=1',{headers:{'Authorization':'Bearer '+T}}).then(r=>r.json()).then(d=>{
+    document.getElementById('petSelect').innerHTML+=d.pets.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+    document.getElementById('petSelect').onchange=function(){if(this.value)loadLogs(this.value);};
+});
+async function loadLogs(petId){document.getElementById('logs').innerHTML='<div class="text-center py-5"><div class="spinner-border"></div></div>';
+document.getElementById('logs').innerHTML=`
+    <div class="card border-0 shadow-sm"><div class="card-body"><h5>日记</h5>
+    <form id="logForm" class="row g-2 mb-3"><div class="col-md-3"><input name="log_date" type="date" class="form-control" required></div>
+    <div class="col-md-2"><select name="log_type" class="form-select"><option value="feeding">喂食</option><option value="walking">散步</option><option value="potty">如厕</option><option value="medication">用药</option><option value="grooming">美容</option><option value="other">其他</option></select></div>
+    <div class="col-md-4"><input name="content" class="form-control" placeholder="记录内容..." required></div>
+    <div class="col-md-1"><button class="btn btn-primary"><i class="bi bi-plus"></i></button></div></form>
+    <div class="text-muted text-center py-3">暂无日记记录</div></div></div>`;}</script></div></body></html>

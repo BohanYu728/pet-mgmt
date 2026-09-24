@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head><title>注册</title>
+<style>
+.role-tabs { background: #f1f3f5; border-radius: 12px; padding: 4px; }
+.role-tab { border-radius: 10px; padding: 10px 16px; font-weight: 600; border: none; background: transparent; cursor: pointer; transition: all .2s; color: #6c757d; }
+.role-tab.active-user { background: #4361ee; color: #fff; }
+.role-tab.active-merchant { background: #f77f00; color: #fff; }
+</style>
+</head>
+<body>
+<div layout:fragment="content">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+            <div class="text-center mb-4">
+                <i class="bi bi-heart-fill text-primary fs-1"></i>
+                <h3 class="fw-bold mt-2" id="regTitle">创建账号</h3>
+                <p class="text-muted" id="regDesc">加入宠物管家，开启智能养宠之旅</p>
+            </div>
+            <!-- 角色切换 -->
+            <div class="d-flex mb-4 role-tabs">
+                <button class="role-tab flex-fill active-user" id="userTab" onclick="switchRole('user')"><i class="bi bi-person me-1"></i> 用户注册</button>
+                <button class="role-tab flex-fill" id="merchantTab" onclick="switchRole('merchant')"><i class="bi bi-shop me-1"></i> 商户入驻</button>
+            </div>
+            <div class="card border-0 shadow-sm" style="border-radius:16px">
+                <div class="card-body p-4">
+                    <div id="regAlert" class="alert alert-danger d-none py-2 small"></div>
+                    <div id="regSuccess" class="alert alert-success d-none py-2 small"></div>
+                    <form id="regForm">
+                        <input type="hidden" id="regRole" value="user">
+                        <div class="mb-2"><label class="form-label small fw-bold"><i class="bi bi-person me-1"></i>用户名 <span class="text-danger">*</span></label><input type="text" class="form-control" id="username" required minlength="3" placeholder="至少3个字符"></div>
+                        <div class="mb-2"><label class="form-label small fw-bold"><i class="bi bi-envelope me-1"></i>邮箱 <span class="text-danger">*</span></label><input type="email" class="form-control" id="email" required placeholder="请输入邮箱"></div>
+                        <div class="mb-2"><label class="form-label small fw-bold"><i class="bi bi-phone me-1"></i>手机号</label><input type="text" class="form-control" id="phone" placeholder="选填"></div>
+                        <div class="mb-2"><label class="form-label small fw-bold"><i class="bi bi-lock me-1"></i>密码 <span class="text-danger">*</span></label><input type="password" class="form-control" id="password" required minlength="6" placeholder="至少6位"></div>
+                        <div class="mb-2"><label class="form-label small fw-bold"><i class="bi bi-lock-fill me-1"></i>确认密码 <span class="text-danger">*</span></label><input type="password" class="form-control" id="confirmPassword" required minlength="6" placeholder="再次输入密码"></div>
+                        <!-- 商户专属 -->
+                        <div class="mb-3 d-none" id="storeField"><label class="form-label small fw-bold"><i class="bi bi-shop me-1"></i>店铺名称 <span class="text-danger">*</span></label><input type="text" class="form-control" id="storeName" placeholder="您的宠物用品店铺名称"></div>
+                        <div class="mb-3 p-2 rounded bg-warning bg-opacity-10 d-none" id="approvalNote"><small class="text-warning"><i class="bi bi-info-circle me-1"></i>商户入驻申请提交后需等待管理员审核，审核通过后方可登录。</small></div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" id="regBtn"><span id="regBtnText"><i class="bi bi-person-plus me-1"></i> 注册</span></button>
+                    </form>
+                    <div class="text-center mt-3"><small class="text-muted">已有账号？</small> <a href="/auth/login" class="fw-bold text-primary">立即登录</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+let currentRole = 'user';
+// Check URL params for merchant type
+if (window.location.search.includes('type=merchant')) currentRole = 'merchant';
+
+function switchRole(role) {
+    currentRole = role;
+    ['user','merchant'].forEach(r => {
+        const tab = document.getElementById(r+'Tab');
+        tab.classList.remove('active-user','active-merchant');
+        if (r === role) tab.classList.add('active-'+role);
+    });
+    document.getElementById('regRole').value = role;
+    document.getElementById('regTitle').textContent = role === 'merchant' ? '商户入驻' : '创建账号';
+    document.getElementById('regDesc').textContent = role === 'merchant' ? '申请成为平台商户，销售宠物用品' : '加入宠物管家，开启智能养宠之旅';
+    document.getElementById('storeField').classList.toggle('d-none', role !== 'merchant');
+    document.getElementById('approvalNote').classList.toggle('d-none', role !== 'merchant');
+    const btn = document.getElementById('regBtn');
+    btn.classList.remove('btn-primary','btn-warning');
+    btn.classList.add(role === 'merchant' ? 'btn-warning' : 'btn-primary');
+    document.getElementById('regBtnText').innerHTML = role === 'merchant'
+        ? '<i class="bi bi-shop me-1"></i> 提交入驻申请'
+        : '<i class="bi bi-person-plus me-1"></i> 注册';
+}
+switchRole(currentRole);
+
+document.getElementById('regForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const alert = document.getElementById('regAlert'), success = document.getElementById('regSuccess');
+    alert.classList.add('d-none'); success.classList.add('d-none');
+
+    const pw = document.getElementById('password').value;
+    if (pw !== document.getElementById('confirmPassword').value) {
+        alert.textContent = '两次密码不一致'; alert.classList.remove('d-none'); return;
+    }
+    if (pw.length < 6) { alert.textContent = '密码至少6位'; alert.classList.remove('d-none'); return; }
+
+    const btn = document.getElementById('regBtn'); btn.disabled = true;
+
+    const url = currentRole === 'merchant' ? '/auth/merchant/register' : '/auth/register';
+    const body = { username: document.getElementById('username').value.trim(), email: document.getElementById('email').value.trim(), password: pw, phone: document.getElementById('phone').value.trim() || null };
+    if (currentRole === 'merchant') { body.storeName = document.getElementById('storeName').value.trim();
+        if (!body.storeName) { alert.textContent = '请输入店铺名称'; alert.classList.remove('d-none'); btn.disabled = false; return; } }
+
+    try {
+        const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const data = await res.json();
+        if (data.error) { alert.textContent = data.error; alert.classList.remove('d-none'); }
+        else {
+            if (data.data && data.data.token) {
+                localStorage.setItem('token', data.data.token);
+                document.cookie = 'token=' + data.data.token + '; path=/; max-age=604800';
+            }
+            success.textContent = data.message; success.classList.remove('d-none');
+            setTimeout(() => { location.href = currentRole === 'merchant' ? '/' : '/dashboard'; }, 1500);
+        }
+    } catch(ex) { alert.textContent = '网络错误'; alert.classList.remove('d-none'); }
+    btn.disabled = false;
+});
+</script>
+</div>
+</body>
+</html>

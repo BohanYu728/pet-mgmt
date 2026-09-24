@@ -1,0 +1,12 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>管理后台</title></head>
+<body><div layout:fragment="content"><div class="container py-4"><h2 class="mb-4"><i class="bi bi-shield-check me-2"></i>平台管理</h2>
+<div class="row g-3 mb-4" id="stats"><div class="col-12"><div class="spinner-border"></div></div></div></div>
+<script th:inline="javascript">const T=getToken();
+fetch('/api/admin/stats',{headers:{'Authorization':'Bearer '+T}}).then(r=>r.json()).then(d=>{
+    document.getElementById('stats').innerHTML=`
+    <div class="col-md-3"><div class="card border-0 shadow-sm bg-primary bg-opacity-10"><div class="card-body text-center"><div class="fs-2 fw-bold text-primary">${d.user_count||0}</div><div>用户数</div></div></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm bg-success bg-opacity-10"><div class="card-body text-center"><div class="fs-2 fw-bold text-success">${d.pet_count||0}</div><div>宠物数</div></div></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm bg-warning bg-opacity-10"><div class="card-body text-center"><div class="fs-2 fw-bold text-warning">${d.merchant_count||0}</div><div>商户数</div></div></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm bg-info bg-opacity-10"><div class="card-body text-center"><div class="fs-2 fw-bold text-info">${d.product_count||0}</div><div>商品数</div></div></div></div>`;
+});
+function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}</script></div></body></html>

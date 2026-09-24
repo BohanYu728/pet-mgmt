@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>AI 健康报告</title></head>
+<body><div layout:fragment="content"><div class="container py-4">
+<div class="text-center mb-4"><i class="bi bi-clipboard2-heart fs-1 text-warning"></i><h2 class="fw-bold mt-2">AI 健康报告</h2><p class="text-muted">基于 ML 模型评估宠物健康状态，品种遗传风险分析和个性化建议</p></div>
+<div class="row justify-content-center"><div class="col-lg-7">
+<div class="card border-0 shadow-sm"><div class="card-body p-4">
+<div class="mb-3"><label class="form-label">选择宠物</label><select id="petSelect" class="form-select" onchange="showPetInfo()"><option value="">请选择...</option></select></div>
+<div id="petInfo" class="mb-3 p-3 bg-light rounded-3" style="display:none"></div>
+<button class="btn btn-warning w-100" id="generateBtn" disabled onclick="generate()"><i class="bi bi-cpu me-1"></i>生成 AI 健康报告</button>
+<div id="result" class="mt-4" style="display:none"></div>
+</div></div></div></div></div>
+<script>const T=getToken();let petData={};
+fetch('/api/pets?page=1',{headers:{'Authorization':'Bearer '+T}}).then(r=>r.json()).then(d=>{
+    petData=d.pets.reduce((a,p)=>(a[p.id]=p,a),{});
+    document.getElementById('petSelect').innerHTML+='<option value="">请选择...</option>'+d.pets.map(p=>`<option value="${p.id}">${p.name} (${p.species==='dog'?'狗':'猫'})</option>`).join('');
+});
+function showPetInfo(){const pid=document.getElementById('petSelect').value;if(!pid)return;const p=petData[pid];document.getElementById('petInfo').style.display='block';document.getElementById('petInfo').innerHTML=`<div class="d-flex align-items-center gap-3"><div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width:48px;height:48px"><i class="bi ${p.species==='dog'?'bi-dog text-warning':'bi-cat text-info'}"></i></div><div><strong>${p.name}</strong> · ${p.breed||'未知品种'} · ${p.age_display||(p.age?p.age+'岁':'未知')} · ${p.weight}kg · ${p.gender==='male'?'公':p.gender==='female'?'母':'未知'}</div></div>`;document.getElementById('generateBtn').disabled=false;}
+async function generate(){const pid=document.getElementById('petSelect').value;const btn=document.getElementById('generateBtn');btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>分析中...';const r=await fetch('/api/ai/health-report/'+pid,{method:'POST',headers:{'Authorization':'Bearer '+T}});const j=await r.json();document.getElementById('result').style.display='block';document.getElementById('result').innerHTML=`<div class="card bg-light"><div class="card-body"><pre style="white-space:pre-wrap;font-family:inherit;font-size:0.95rem">${j.report||j.error||'生成失败'}</pre></div></div>`;btn.innerHTML='<i class="bi bi-cpu me-1"></i>生成 AI 健康报告';btn.disabled=false;}</script></div></body></html>

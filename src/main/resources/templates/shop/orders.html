@@ -1,0 +1,9 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>我的订单</title></head>
+<body><div layout:fragment="content"><div class="container py-4"><h2 class="mb-4"><i class="bi bi-receipt me-2"></i>我的订单</h2>
+<div id="orders"><div class="text-center py-5"><div class="spinner-border"></div></div></div></div>
+<script th:inline="javascript">const T=getToken();
+fetch('/api/shop/api/orders',{headers:{'Authorization':'Bearer '+T}}).then(r=>r.json()).then(d=>{
+    const el=document.getElementById('orders');
+    if(!d.items||d.items.length===0){el.innerHTML='<div class="text-center py-5 text-muted">暂无订单</div>';return;}
+    el.innerHTML=d.items.map(o=>`<div class="card mb-3 border shadow-sm"><div class="card-body"><div class="d-flex justify-content-between"><h6>订单 #${o.id}</h6><span class="badge ${o.status==='pending'?'bg-warning':o.status==='paid'?'bg-info':o.status==='delivered'?'bg-success':'bg-secondary'}">${o.status_display}</span></div>
+    <p class="text-muted small">¥${o.total_amount?o.total_amount.toFixed(2):'0.00'} · ${o.item_count||0}件 · ${o.created_at}</p></div></div>`).join('');});</script></div></body></html>

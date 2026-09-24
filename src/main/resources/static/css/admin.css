@@ -1,0 +1,44 @@
+/* ============================================================
+   管理仪表盘专用样式
+   ============================================================ */
+
+/* Stat cards with gradient backgrounds */
+.dash-card {
+    border-radius: 16px;
+    padding: 22px 18px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    transition: transform .2s, box-shadow .2s;
+    cursor: default;
+}
+.dash-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,.12); }
+.dash-card::after {
+    content: '';
+    position: absolute;
+    width: 100px; height: 100px;
+    background: rgba(255,255,255,.1);
+    border-radius: 50%;
+    top: -30px; right: -30px;
+}
+.dash-card-icon { font-size: 1.5rem; opacity: .9; margin-bottom: 8px; }
+.dash-card-value { font-size: 1.8rem; font-weight: 800; letter-spacing: -.5px; }
+.dash-card-label { font-size: .8rem; opacity: .85; margin-top: 2px; }
+
+.card-1 { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+.card-2 { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+.card-3 { background: linear-gradient(135deg, #f97316 0%, #fb923c 100%); }
+.card-4 { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+.card-5 { background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%); }
+.card-6 { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); }
+
+/* Chart card polish */
+.card-header { font-size: .9rem; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dash-card { padding: 16px 14px; }
+    .dash-card-value { font-size: 1.4rem; }
+    .dash-card-icon { font-size: 1.2rem; }
+}

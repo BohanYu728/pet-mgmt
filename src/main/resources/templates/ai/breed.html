@@ -1,0 +1,30 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>AI 品种识别</title></head>
+<body><div layout:fragment="content"><div class="container py-4">
+<div class="text-center mb-4"><i class="bi bi-search fs-1 text-primary"></i><h2 class="fw-bold mt-2">AI 品种识别</h2><p class="text-muted">上传宠物照片，AI 智能识别品种并给出养护建议</p></div>
+<div class="row justify-content-center"><div class="col-lg-6">
+<div class="card border-0 shadow-sm"><div class="card-body p-4">
+<div class="mb-3"><label class="form-label">选择宠物（可选，用于保存记录）</label><select id="petSelect" class="form-select"><option value="">不关联宠物</option></select></div>
+<div class="mb-3"><label class="form-label">上传宠物照片</label>
+<div class="border border-2 border-dashed rounded-3 p-4 text-center bg-light" id="dropZone" style="cursor:pointer">
+    <i class="bi bi-cloud-upload fs-1 text-muted d-block mb-2"></i>
+    <p class="text-muted mb-1">点击或拖拽照片到此处</p>
+    <small class="text-muted">支持 JPG / PNG / WebP 格式</small>
+    <input type="file" id="imageInput" accept="image/*" style="display:none">
+</div>
+<img id="preview" class="img-fluid rounded-3 mt-3" style="max-height:300px;display:none">
+</div>
+<button class="btn btn-primary w-100" id="recognizeBtn" disabled><i class="bi bi-cpu me-1"></i>开始识别</button>
+<div id="result" class="mt-4" style="display:none"></div>
+</div></div></div></div></div>
+<script>const T=getToken();
+fetch('/api/pets?page=1',{headers:{'Authorization':'Bearer '+T}}).then(r=>r.json()).then(d=>{document.getElementById('petSelect').innerHTML+='<option value="">不关联宠物</option>'+d.pets.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');});
+const drop=document.getElementById('dropZone'), input=document.getElementById('imageInput'), preview=document.getElementById('preview'), btn=document.getElementById('recognizeBtn');
+drop.addEventListener('click',()=>input.click());drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('border-primary')});drop.addEventListener('dragleave',()=>drop.classList.remove('border-primary'));drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('border-primary');if(e.dataTransfer.files[0]){input.files=e.dataTransfer.files;handleFile(e.dataTransfer.files[0])}});
+input.addEventListener('change',()=>{if(input.files[0])handleFile(input.files[0])});
+function handleFile(file){const r=new FileReader();r.onload=e=>{preview.src=e.target.result;preview.style.display='block';btn.disabled=false};r.readAsDataURL(file)}
+btn.addEventListener('click',async()=>{btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>识别中...';const fd=new FormData();fd.append('image',input.files[0]);const petId=document.getElementById('petSelect').value;if(petId)fd.append('petId',petId);
+const r=await fetch('/api/ai/breed/recognize',{method:'POST',headers:{'Authorization':'Bearer '+T},body:fd});const j=await r.json();
+document.getElementById('result').style.display='block';
+if(j.error){document.getElementById('result').innerHTML=`<div class="alert alert-danger">${j.error}</div>`}else{
+document.getElementById('result').innerHTML=`<div class="card bg-light"><div class="card-body"><div class="d-flex align-items-center gap-3 mb-3"><div class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="width:64px;height:64px"><i class="bi bi-check-circle fs-3 text-success"></i></div><div><h4 class="mb-1">${j.name_zh||j.breed_name}</h4><div class="text-muted">识别置信度: <span class="fw-bold text-success">${j.confidence}%</span></div></div></div><hr><h6><i class="bi bi-info-circle me-1"></i>品种介绍</h6><p>${j.description||'暂无'}</p><h6><i class="bi bi-heart me-1"></i>养护建议</h6><pre class="bg-white p-3 rounded" style="white-space:pre-wrap;font-size:0.9rem">${j.care_tips||'暂无'}</pre></div></div>`;}
+btn.innerHTML='<i class="bi bi-cpu me-1"></i>开始识别';btn.disabled=false;});</script></div></body></html>

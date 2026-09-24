@@ -1,0 +1,7 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>健康记录</title></head>
+<body><div layout:fragment="content"><div class="container py-4"><h2 class="mb-4"><i class="bi bi-clipboard2-heart me-2"></i>健康记录</h2>
+<div id="records"><div class="text-center py-5"><div class="spinner-border"></div></div></div></div>
+<script th:inline="javascript">const T=getToken();const pid=location.pathname.split('/').pop();
+fetch('/api/pets/'+pid,{headers:{'Authorization':'Bearer '+T}}).then(r=>r.json()).then(d=>{document.querySelector('h2').innerHTML=`<i class="bi bi-clipboard2-heart me-2"></i>${d.pet.name} 的健康记录`;});
+// Health records are loaded via the health API - showing stub for now
+document.getElementById('records').innerHTML='<div class="text-center py-5 text-muted"><i class="bi bi-inbox fs-1 d-block mb-2"></i>健康记录功能开发中</div>';</script></div></body></html>

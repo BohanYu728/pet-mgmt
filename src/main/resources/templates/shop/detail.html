@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} - 宠物商城 - 宠物管家{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <a href="{{ url_for('shop.list_page') }}" class="btn btn-sm btn-outline-secondary mb-3">
+        <i class="bi bi-arrow-left me-1"></i> 返回商城
+    </a>
+
+    <div class="card border-0 shadow-sm">
+        <div class="row g-0">
+            <!-- Product Image -->
+            <div class="col-md-5">
+                <div class="d-flex align-items-center justify-content-center bg-light rounded-start" style="min-height:400px">
+                    {% if product.image %}
+                    <img src="/static/{{ product.image }}" class="img-fluid rounded-start" style="object-fit:cover;width:100%;max-height:500px" alt="{{ product.name }}">
+                    {% else %}
+                    <div class="text-center text-muted">
+                        <i class="bi bi-box2 display-1 opacity-50"></i>
+                        <p>暂无图片</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Product Info -->
+            <div class="col-md-7">
+                <div class="card-body p-4 d-flex flex-column h-100">
+                    <div class="d-flex gap-2 mb-2">
+                        <span class="badge bg-{{ 'success' if product.category == 'food' else 'warning' }}">
+                            {{ '宠物食品' if product.category == 'food' else '宠物玩具' }}
+                        </span>
+                        <span class="badge bg-primary bg-opacity-10 text-primary">
+                            {{ {'dog':'狗狗专用','cat':'猫咪专用','both':'猫狗通用'}.get(product.target_species, '') }}
+                        </span>
+                        {% if not product.is_active %}
+                        <span class="badge bg-secondary">已下架</span>
+                        {% endif %}
+                    </div>
+                    <h2 class="fw-bold mb-3">{{ product.name }}</h2>
+                    <p class="text-muted mb-4">{{ product.description or '暂无描述' }}</p>
+
+                    <div class="mt-auto">
+                        <div class="d-flex align-items-baseline gap-2 mb-3">
+                            <span class="display-6 fw-bold text-primary">&yen;{{ "%.2f"|format(product.price) }}</span>
+                        </div>
+                        <div class="mb-3">
+                            {% if product.stock > 0 %}
+                            <span class="text-success"><i class="bi bi-check-circle me-1"></i>有货（库存 {{ product.stock }} 件）</span>
+                            {% else %}
+                            <span class="text-danger"><i class="bi bi-x-circle me-1"></i>暂时缺货</span>
+                            {% endif %}
+                        </div>
+
+                        {% if product.stock > 0 %}
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="input-group input-group-sm" style="width:120px">
+                                <button class="btn btn-outline-secondary" type="button" onclick="changeQty(-1)">-</button>
+                                <input type="number" class="form-control text-center" id="quantity" value="1" min="1" max="{{ product.stock }}" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="changeQty(1)">+</button>
+                            </div>
+                            <button class="btn btn-primary" id="addToCartBtn" onclick="handleAddToCart()">
+                                <i class="bi bi-cart-plus me-1"></i> 加入购物车
+                            </button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const productId = {{ product.id }};
+const maxStock = {{ product.stock }};
+
+function changeQty(delta) {
+    const input = document.getElementById('quantity');
+    let val = parseInt(input.value) + delta;
+    if (val < 1) val = 1;
+    if (val > maxStock) val = maxStock;
+    input.value = val;
+}
+
+async function handleAddToCart() {
+    const qty = parseInt(document.getElementById('quantity').value);
+    const btn = document.getElementById('addToCartBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 添加中...';
+    const data = await apiRequest('/shop/api/cart', 'POST', { product_id: productId, quantity: qty });
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-cart-plus me-1"></i> 加入购物车';
+    if (data && data.message) {
+        showToast(data.message, 'success');
+    }
+}
+</script>
+{% endblock %}

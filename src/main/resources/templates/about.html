@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}关于我们 - 宠物管家{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header -->
+            <div class="text-center mb-5 pt-3">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width:80px;height:80px;background:var(--primary-bg)">
+                    <i class="bi bi-heart-fill" style="font-size:2rem;color:var(--accent)"></i>
+                </div>
+                <h2 class="fw-bold mb-2">关于宠物管家</h2>
+                <p class="text-muted">用心守护每一只宠物，让宠物管理变得简单温暖</p>
+            </div>
+
+            <!-- What we do -->
+            <div class="card mb-4">
+                <div class="card-header"><i class="bi bi-star me-2"></i>我们提供什么</div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="d-flex gap-3">
+                                <div class="feature-icon ic-teal" style="flex-shrink:0"><i class="bi bi-search"></i></div>
+                                <div>
+                                    <h6 class="fw-bold">品种识别</h6>
+                                    <p class="text-muted small mb-0">基于深度学习的图像识别技术，上传照片即可识别超过 120 种猫狗品种，并提供详细的品种介绍和科学饲养建议。</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex gap-3">
+                                <div class="feature-icon ic-amber" style="flex-shrink:0"><i class="bi bi-emoji-smile"></i></div>
+                                <div>
+                                    <h6 class="fw-bold">情绪分析</h6>
+                                    <p class="text-muted small mb-0">分析宠物照片中的情绪状态，识别开心、放松、焦虑等情绪，提供专业的安抚和陪伴建议。</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex gap-3">
+                                <div class="feature-icon ic-green" style="flex-shrink:0"><i class="bi bi-clipboard2-pulse"></i></div>
+                                <div>
+                                    <h6 class="fw-bold">健康管理</h6>
+                                    <p class="text-muted small mb-0">全面记录疫苗注射、驱虫、体检等健康信息，体重追踪图表，一站式掌握宠物健康动态。</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex gap-3">
+                                <div class="feature-icon ic-coral" style="flex-shrink:0"><i class="bi bi-bell-fill"></i></div>
+                                <div>
+                                    <h6 class="fw-bold">智能提醒</h6>
+                                    <p class="text-muted small mb-0">自动提醒疫苗到期、驱虫时间等重要日程，支持自定义提醒，重要事项永不错过。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tech Stack -->
+            <div class="card mb-4">
+                <div class="card-header"><i class="bi bi-cpu me-2"></i>技术架构</div>
+                <div class="card-body">
+                    <div class="row g-3 text-center">
+                        <div class="col-md-3 col-6">
+                            <div class="p-3 rounded" style="background:var(--bg)">
+                                <i class="bi bi-layers d-block mb-2" style="font-size:1.5rem;color:var(--primary)"></i>
+                                <div class="small fw-bold">Flask</div>
+                                <small class="text-muted">Web 框架</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="p-3 rounded" style="background:var(--bg)">
+                                <i class="bi bi-cpu d-block mb-2" style="font-size:1.5rem;color:var(--secondary)"></i>
+                                <div class="small fw-bold">PyTorch</div>
+                                <small class="text-muted">深度学习</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="p-3 rounded" style="background:var(--bg)">
+                                <i class="bi bi-database d-block mb-2" style="font-size:1.5rem;color:var(--accent)"></i>
+                                <div class="small fw-bold">MySQL</div>
+                                <small class="text-muted">数据存储</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="p-3 rounded" style="background:var(--bg)">
+                                <i class="bi bi-bootstrap d-block mb-2" style="font-size:1.5rem;color:#7952b3"></i>
+                                <div class="small fw-bold">Bootstrap 5</div>
+                                <small class="text-muted">前端框架</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="text-center py-4">
+                {% if not user %}
+                <h5 class="fw-bold mb-3">准备好开始了吗？</h5>
+                <a href="{{ url_for('auth.register_page') }}" class="btn btn-primary btn-lg px-4">
+                    <i class="bi bi-person-plus me-2"></i>免费注册
+                </a>
+                {% else %}
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary btn-lg px-4">
+                    <i class="bi bi-speedometer2 me-2"></i>返回控制台
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

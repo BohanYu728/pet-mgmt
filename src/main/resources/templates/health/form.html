@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}{{ '编辑' if record else '添加' }}健康记录 - 宠物管家{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="bi bi-clipboard2-pulse me-2"></i>
+                    {{ '编辑健康记录' if record else '添加健康记录' }} - {{ pet.name }}
+                </div>
+                <div class="card-body">
+                    <form id="healthForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">记录类型 <span class="text-danger">*</span></label>
+                                <select name="record_type" class="form-select" id="recordType">
+                                    <option value="vaccine" {{ 'selected' if record and record.record_type == 'vaccine' else '' }}><i class="bi bi-eyedropper"></i> 疫苗</option>
+                                    <option value="deworming" {{ 'selected' if record and record.record_type == 'deworming' else '' }}><i class="bi bi-capsule"></i> 驱虫</option>
+                                    <option value="checkup" {{ 'selected' if record and record.record_type == 'checkup' else '' }}><i class="bi bi-hospital"></i> 体检</option>
+                                    <option value="feeding" {{ 'selected' if record and record.record_type == 'feeding' else '' }}><i class="bi bi-egg-fill"></i> 喂养</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">标题 <span class="text-danger">*</span></label>
+                                <input type="text" name="title" class="form-control" required value="{{ record.title if record else '' }}" placeholder="如：狂犬疫苗第三针">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">记录日期 <span class="text-danger">*</span></label>
+                                <input type="date" name="record_date" class="form-control" required value="{{ record.record_date if record else '' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" id="nextDueLabel">下次日期</label>
+                                <input type="date" name="next_due_date" class="form-control" value="{{ record.next_due_date if record else '' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">医生/医院</label>
+                                <input type="text" name="veterinarian" class="form-control" value="{{ record.veterinarian or '' }}" placeholder="如：张医生 / 爱宠医院">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">详细描述</label>
+                                <textarea name="description" class="form-control" rows="2" placeholder="记录详细信息...">{{ record.description or '' }}</textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">备注</label>
+                                <textarea name="notes" class="form-control" rows="2" placeholder="其他备注...">{{ record.notes or '' }}</textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">附件（化验单/处方等）</label>
+                                <input type="file" name="attachment" class="form-control" accept=".jpg,.jpeg,.png,.webp,.pdf">
+                                {% if record and record.attachment_path %}
+                                <small class="text-muted">当前附件: {{ record.attachment_path }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <button type="submit" class="btn btn-primary px-5" id="submitBtn">
+                                <span class="spinner-border spinner-border-sm d-none" id="submitSpinner"></span>
+                                {{ '保存修改' if record else '添加记录' }}
+                            </button>
+                            <a href="{{ url_for('pet.detail_page', pet_id=pet.id) }}" class="btn btn-secondary ms-2">取消</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.getElementById('healthForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const recordId = {{ record.id if record else 'null' }};
+    const isEdit = recordId !== null;
+    const btn = document.getElementById('submitBtn');
+    const sp = document.getElementById('submitSpinner');
+    btn.disabled = true; sp.classList.remove('d-none');
+
+    // Use FormData to support file upload
+    const fd = new FormData();
+    fd.append('record_type', this.record_type.value);
+    fd.append('title', this.title.value.trim());
+    fd.append('record_date', this.record_date.value);
+    if (this.next_due_date.value) fd.append('next_due_date', this.next_due_date.value);
+    fd.append('veterinarian', this.veterinarian.value.trim());
+    fd.append('description', this.description.value.trim());
+    fd.append('notes', this.notes.value.trim());
+    const attachmentFile = this.attachment.files[0];
+    if (attachmentFile) fd.append('attachment', attachmentFile);
+
+    try {
+        const url = isEdit ? `/health/${recordId}` : `/health/pet/{{ pet.id }}`;
+        const method = isEdit ? 'PUT' : 'POST';
+        const result = await apiRequest(url, method, fd, true); if (resp && !resp.error) {
+            showToast(isEdit ? '更新成功' : '添加成功', 'success');
+            setTimeout(() => location.href = `/pets/{{ pet.id }}`, 500);
+        } else { showToast(result.error || '操作失败', 'error');
+        }
+    } catch (err) {
+        showToast('网络错误', 'error');
+    } finally {
+        btn.disabled = false; sp.classList.add('d-none');
+    }
+});
+</script>
+{% endblock %}

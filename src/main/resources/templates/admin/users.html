@@ -1,0 +1,9 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>用户管理</title></head>
+<body><div layout:fragment="content"><div class="container py-4"><h2 class="mb-4"><i class="bi bi-people me-2"></i>用户管理</h2>
+<div class="table-responsive" id="table"><div class="text-center py-5"><div class="spinner-border"></div></div></div></div>
+<script th:inline="javascript">const T=getToken();
+fetch('/api/admin/users/list',{headers:{'Authorization':'Bearer '+T}}).then(r=>r.json()).then(d=>{
+    document.getElementById('table').innerHTML=`<table class="table table-hover"><thead><tr><th>ID</th><th>用户名</th><th>邮箱</th><th>宠物数</th><th>操作</th></tr></thead><tbody>${d.users.map(u=>`<tr><td>${u.id}</td><td>${u.username}</td><td>${u.email}</td><td>${u.pet_count||0}</td><td><button class="btn btn-danger btn-sm" onclick="delUser(${u.id})">删除</button></td></tr>`).join('')}</tbody></table>`;
+});
+async function delUser(id){if(!confirm('确定删除?'))return;await fetch('/api/admin/users/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+T}});location.reload();}
+function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}</script></div></body></html>

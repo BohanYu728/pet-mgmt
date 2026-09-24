@@ -1,0 +1,20 @@
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg"><div class="modal-content border-0 shadow">
+        <div class="modal-header"><h6 class="modal-title" id="modalTitle">添加商品</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body"><form id="productForm">
+            <input type="hidden" id="editId">
+            <div class="row g-3">
+                <div class="col-md-8"><label class="form-label small">商品名称 <span class="text-danger">*</span></label><input type="text" class="form-control form-control-sm" id="pName" required></div>
+                <div class="col-md-4"><label class="form-label small">价格（元）</label><input type="number" class="form-control form-control-sm" id="pPrice" step="0.01" min="0" required></div>
+                <div class="col-md-4"><label class="form-label small">分类</label><select class="form-select form-select-sm" id="pCategory"><option value="food">宠物食品</option><option value="toy">宠物玩具</option></select></div>
+                <div class="col-md-4"><label class="form-label small">适用物种</label><select class="form-select form-select-sm" id="pSpecies"><option value="both">猫狗通用</option><option value="dog">狗狗专用</option><option value="cat">猫咪专用</option></select></div>
+                <div class="col-md-4"><label class="form-label small">库存数量</label><input type="number" class="form-control form-control-sm" id="pStock" min="0" value="0"></div>
+                <div class="col-12"><label class="form-label small">商品描述</label><textarea class="form-control form-control-sm" id="pDesc" rows="3"></textarea></div>
+                <div class="col-md-6"><label class="form-label small">商品图片</label><input type="file" class="form-control form-control-sm" id="pImage" accept="image/jpeg,image/png,image/webp"></div>
+                <div class="col-md-6 d-flex align-items-end"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="pActive" checked><label class="form-check-label small" for="pActive">上架</label></div></div>
+            </div>
+            <div id="imgPreview" class="mt-2 d-none"><img id="imgPreviewImg" src="" height="60" style="object-fit:cover;border-radius:6px"><small class="text-muted ms-2">当前图片</small></div>
+        </form></div>
+        <div class="modal-footer"><button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">取消</button><button type="button" class="btn btn-sm btn-primary" id="saveBtn" onclick="save()">保存</button></div>
+    </div></div>
+</div>

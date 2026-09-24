@@ -1,0 +1,13 @@
+<!DOCTYPE html><html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"><head><title>在线问诊</title></head>
+<body><div layout:fragment="content"><div class="container py-4"><h2 class="mb-4"><i class="bi bi-chat-dots me-2"></i>在线问诊</h2>
+<div class="card border-0 shadow-sm"><div class="card-body p-4"><div id="alert" class="alert d-none"></div>
+<form id="consultForm"><div class="mb-3"><label>宠物种类</label><select name="species" class="form-select"><option value="dog">狗狗</option><option value="cat">猫咪</option></select></div>
+<div class="mb-3"><label>症状描述 *</label><textarea name="symptoms" class="form-control" rows="4" required placeholder="请详细描述宠物症状..."></textarea></div>
+<div class="mb-3"><label>持续时间</label><input name="duration" class="form-control" placeholder="如：3天"></div>
+<button type="submit" class="btn btn-primary"><i class="bi bi-send me-1"></i>提交问诊</button></form>
+<div id="result" class="mt-4" style="display:none"><div class="card bg-light"><div class="card-body"><h5 class="text-primary">AI 诊断建议</h5><div id="adviceText" style="white-space:pre-wrap"></div><p class="mt-2"><strong>可能疾病：</strong><span id="conditions"></span> · <strong>紧急程度：</strong><span id="severity"></span></p></div></div></div></div></div></div>
+<script th:inline="javascript">const T=getToken();
+document.getElementById('consultForm').addEventListener('submit',async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));
+const r=await fetch('/api/consultation/ask',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+T},body:JSON.stringify(d)});const j=await r.json();
+if(j.error){document.getElementById('alert').textContent=j.error;document.getElementById('alert').classList.remove('d-none');return;}
+document.getElementById('result').style.display='block';document.getElementById('adviceText').textContent=j.advice;document.getElementById('conditions').textContent=j.matched_conditions;document.getElementById('severity').textContent=j.severity;});</script></div></body></html>

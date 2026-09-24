@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% block title %}商品管理 - 宠物管家{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1"><i class="bi bi-bag me-2"></i>商品管理</h1>
+            <p class="text-muted mb-0">管理商城中的所有商品</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary btn-sm" onclick="seedSampleProducts()">
+                <i class="bi bi-database-add me-1"></i> 填充示例数据
+            </button>
+            <a href="{{ url_for('shop.list_page') }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                <i class="bi bi-eye me-1"></i> 查看商城
+            </a>
+            <button class="btn btn-primary btn-sm" onclick="openAddModal()">
+                <i class="bi bi-plus-lg me-1"></i> 添加商品
+            </button>
+        </div>
+    </div>
+
+    <!-- Products Table -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4" style="width:60px">图片</th>
+                            <th>商品名称</th>
+                            <th>分类</th>
+                            <th>适用物种</th>
+                            <th class="text-end">价格</th>
+                            <th class="text-center">库存</th>
+                            <th class="text-center">状态</th>
+                            <th class="text-end pe-4">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                        <tr><td colspan="8" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm me-2"></div>加载中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Edit Modal -->
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header">
+                <h6 class="modal-title" id="productModalTitle">添加商品</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm" enctype="multipart/form-data">
+                    <input type="hidden" id="editProductId">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label small">商品名称 <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm" id="prodName" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">价格（元） <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control form-control-sm" id="prodPrice" step="0.01" min="0" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">分类</label>
+                            <select class="form-select form-select-sm" id="prodCategory">
+                                <option value="food">宠物食品</option>
+                                <option value="toy">宠物玩具</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">适用物种</label>
+                            <select class="form-select form-select-sm" id="prodSpecies">
+                                <option value="both">猫狗通用</option>
+                                <option value="dog">狗狗专用</option>
+                                <option value="cat">猫咪专用</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">库存数量</label>
+                            <input type="number" class="form-control form-control-sm" id="prodStock" min="0" value="0">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small">商品描述</label>
+                            <textarea class="form-control form-control-sm" id="prodDescription" rows="3"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small">商品图片</label>
+                            <div class="input-group input-group-sm">
+                                <input type="file" class="form-control form-control-sm" id="prodImage" accept="image/jpeg,image/png,image/webp">
+                            </div>
+                            <div id="currentImagePreview" class="mt-2 d-none">
+                                <img id="currentImageImg" src="" height="60" style="object-fit:cover;border-radius:6px">
+                                <small class="text-muted ms-2">当前图片</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="prodActive" checked>
+                                <label class="form-check-label small" for="prodActive">上架</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-sm btn-primary" id="saveProductBtn" onclick="saveProduct()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let productModal;
+
+document.addEventListener('DOMContentLoaded', () => {
+    productModal = new bootstrap.Modal(document.getElementById('productModal'));
+    loadProducts();
+});
+
+async function loadProducts() {
+    const tbody = document.getElementById('productTableBody');
+    try {
+        const data = await apiRequest('/shop/api/products?per_page=100');
+        if (!data || !data.items) return;
+        if (data.items.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="8" class="text-center py-5 text-muted">
+                <i class="bi bi-inbox display-6 d-block mb-2"></i>暂无商品，点击"添加商品"或"填充示例数据"
+            </td></tr>`;
+            return;
+        }
+        tbody.innerHTML = data.items.map(p => `
+            <tr>
+                <td class="ps-4">
+                    <div style="width:44px;height:44px;border-radius:6px;overflow:hidden;background:var(--surface-alt)">
+                        ${p.image ? `<img src="/static/${p.image}" width="44" height="44" style="object-fit:cover">`
+                            : `<div class="d-flex align-items-center justify-content-center w-100 h-100"><i class="bi bi-box2 text-muted"></i></div>`}
+                    </div>
+                </td>
+                <td class="fw-bold">${p.name}</td>
+                <td><span class="badge bg-${p.category === 'food' ? 'success' : 'warning'}">${p.category_display}</span></td>
+                <td><span class="badge bg-primary bg-opacity-10 text-primary">${p.target_species_display}</span></td>
+                <td class="text-end text-primary fw-bold">&yen;${p.price.toFixed(2)}</td>
+                <td class="text-center">${p.stock}</td>
+                <td class="text-center">${p.is_active ? '<span class="badge bg-success">上架</span>' : '<span class="badge bg-secondary">下架</span>'}</td>
+                <td class="text-end pe-4">
+                    <button class="btn btn-sm btn-outline-secondary me-1" onclick="openEditModal(${p.id})" title="编辑"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="handleDelete(${p.id}, '${p.name}')" title="删除"><i class="bi bi-trash"></i></button>
+                </td>
+            </tr>`).join('');
+    } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-danger">加载失败</td></tr>';
+    }
+}
+
+function openAddModal() {
+    document.getElementById('productModalTitle').textContent = '添加商品';
+    document.getElementById('editProductId').value = '';
+    document.getElementById('prodName').value = '';
+    document.getElementById('prodPrice').value = '';
+    document.getElementById('prodCategory').value = 'food';
+    document.getElementById('prodSpecies').value = 'both';
+    document.getElementById('prodStock').value = '0';
+    document.getElementById('prodDescription').value = '';
+    document.getElementById('prodActive').checked = true;
+    document.getElementById('prodImage').value = '';
+    document.getElementById('currentImagePreview').classList.add('d-none');
+    productModal.show();
+}
+
+async function openEditModal(productId) {
+    const data = await apiRequest(`/shop/api/products/${productId}`);
+    if (!data || !data.product) return;
+    const p = data.product;
+    document.getElementById('productModalTitle').textContent = '编辑商品';
+    document.getElementById('editProductId').value = p.id;
+    document.getElementById('prodName').value = p.name;
+    document.getElementById('prodPrice').value = p.price;
+    document.getElementById('prodCategory').value = p.category;
+    document.getElementById('prodSpecies').value = p.target_species;
+    document.getElementById('prodStock').value = p.stock;
+    document.getElementById('prodDescription').value = p.description || '';
+    document.getElementById('prodActive').checked = p.is_active;
+    document.getElementById('prodImage').value = '';
+    if (p.image) {
+        document.getElementById('currentImagePreview').classList.remove('d-none');
+        document.getElementById('currentImageImg').src = '/' + p.image;
+    } else {
+        document.getElementById('currentImagePreview').classList.add('d-none');
+    }
+    productModal.show();
+}
+
+async function saveProduct() {
+    const id = document.getElementById('editProductId').value;
+    const data = {
+        name: document.getElementById('prodName').value.trim(),
+        price: parseFloat(document.getElementById('prodPrice').value) || 0,
+        category: document.getElementById('prodCategory').value,
+        target_species: document.getElementById('prodSpecies').value,
+        stock: parseInt(document.getElementById('prodStock').value) || 0,
+        description: document.getElementById('prodDescription').value.trim(),
+        is_active: document.getElementById('prodActive').checked,
+    };
+
+    if (!data.name) { showToast('请输入商品名称', 'error'); return; }
+    if (data.price <= 0) { showToast('请输入有效价格', 'error'); return; }
+
+    const btn = document.getElementById('saveProductBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>保存中...';
+
+    let result;
+    if (id) {
+        result = await apiRequest(`/shop/api/products/${id}`, 'PUT', data);
+    } else {
+        result = await apiRequest('/shop/api/products', 'POST', data);
+    }
+
+    if (result) {
+        // Upload image if selected
+        const imageFile = document.getElementById('prodImage').files[0];
+        if (imageFile && result.product) {
+            const formData = new FormData();
+            formData.append('image', imageFile);
+            await fetch(`/shop/api/products/${result.product.id}/image`, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Authorization': 'Bearer ' + getToken() }
+            });
+        }
+        productModal.hide();
+        showToast(result.message || '保存成功', 'success');
+        loadProducts();
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '保存';
+}
+
+async function handleDelete(productId, name) {
+    if (!confirm(`确定要删除商品「${name}」吗？此操作不可撤销。`)) return;
+    const data = await apiRequest(`/shop/api/products/${productId}`, 'DELETE');
+    if (data) {
+        showToast(data.message, 'success');
+        loadProducts();
+    }
+}
+
+async function seedSampleProducts() {
+    if (!confirm('将填充12件示例商品数据，是否继续？')) return;
+    const data = await apiRequest('/shop/api/seed', 'POST');
+    if (data) {
+        showToast(data.message, 'success');
+        loadProducts();
+    }
+}
+</script>
+{% endblock %}
