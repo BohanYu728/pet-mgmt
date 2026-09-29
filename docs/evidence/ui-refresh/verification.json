@@ -1,0 +1,341 @@
+{
+  "at": "2026-09-29T08:15:35.956Z",
+  "results": [
+    {
+      "name": "1440px /login",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /register",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "360px /login",
+      "passed": true,
+      "detail": "{\"width\":360,\"scroll\":360,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "360px /register",
+      "passed": true,
+      "detail": "{\"width\":360,\"scroll\":360,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /dashboard",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /pets",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /search",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /pets/1/health",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /pets/1/weights",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /pets/1/reminders",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /pets/1/logs",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /pets/1/photos",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /reminders",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /logs",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /photos",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /profile",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /shop/products",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /shop/cart",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /shop/orders",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /community/hospitals",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /ai/assistant",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /ai/breed",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /ai/emotion",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /ai/health",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /ai/recommend",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /ai/consultation",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "助手回答及来源展示",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "390px /dashboard",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /pets",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /search",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /pets/1/health",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /pets/1/weights",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /pets/1/reminders",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /pets/1/logs",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /pets/1/photos",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /reminders",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /logs",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /photos",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /profile",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /shop/products",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /shop/cart",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /shop/orders",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /community/hospitals",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /ai/assistant",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /ai/breed",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /ai/emotion",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /ai/health",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /ai/recommend",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "390px /ai/consultation",
+      "passed": true,
+      "detail": "{\"width\":390,\"scroll\":390,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "移动导航展开",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Escape关闭移动导航",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "导航后菜单收起",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px /admin/dashboard",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /admin/users",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /admin/pets",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /admin/merchants",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "360px /admin/dashboard",
+      "passed": true,
+      "detail": "{\"width\":360,\"scroll\":360,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "360px /admin/users",
+      "passed": true,
+      "detail": "{\"width\":360,\"scroll\":360,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "360px /admin/pets",
+      "passed": true,
+      "detail": "{\"width\":360,\"scroll\":360,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "360px /admin/merchants",
+      "passed": true,
+      "detail": "{\"width\":360,\"scroll\":360,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /merchant/products",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /merchant/orders",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "1440px /merchant/billing",
+      "passed": true,
+      "detail": "{\"width\":1440,\"scroll\":1440,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "360px /merchant/products",
+      "passed": true,
+      "detail": "{\"width\":360,\"scroll\":360,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "360px /merchant/orders",
+      "passed": true,
+      "detail": "{\"width\":360,\"scroll\":360,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "360px /merchant/billing",
+      "passed": true,
+      "detail": "{\"width\":360,\"scroll\":360,\"broken\":[],\"errors\":[]}"
+    },
+    {
+      "name": "浏览器无未捕获错误",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "errors": []
+}

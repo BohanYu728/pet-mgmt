@@ -1,0 +1,9 @@
+{
+  "passed": 4,
+  "checks": [
+    "broken pet URL has default badge and accurate alt",
+    "broken product URL has sample badge and accurate alt",
+    "same component resets badge and alt after source becomes valid",
+    "cart fallback has compact visible badge and accurate alt"
+  ]
+}

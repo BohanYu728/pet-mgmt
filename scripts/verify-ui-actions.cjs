@@ -6,7 +6,7 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 
 const root = path.resolve(__dirname, '..');
-const evidence = path.join(root, 'docs/evidence');
+const evidence = path.join(root, process.env.UI_EVIDENCE_DIR || 'docs/evidence');
 const origin = 'http://127.0.0.1:5173';
 const checks = [];
 const errors = [];
