@@ -14,4 +14,4 @@
 document.getElementById('pf').addEventListener('submit',async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));
 const r=await fetch('/api/pets',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+T},body:JSON.stringify(d)});const j=await r.json();
 if(j.error){const a=document.getElementById('alert');a.className='alert alert-danger';a.textContent=j.error;a.classList.remove('d-none');}else location.href='/pets';});
-function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}</script></div></body></html>
+function getToken(){return null||null||'';}</script></div></body></html>

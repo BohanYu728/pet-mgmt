@@ -26,4 +26,4 @@ const a=document.getElementById('pwAlert');a.className=j.error?'alert alert-dang
 // Avatar upload
 document.getElementById('avatarInput').onchange=async function(){const f=this.files[0];if(!f)return;const fd=new FormData();fd.append('avatar',f);const r=await fetch('/auth/avatar',{method:'POST',headers:{'Authorization':'Bearer '+T},body:fd});const j=await r.json();j.message?location.reload():alert(j.error);};
 });
-function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}</script></div></body></html>
+function getToken(){return null||null||'';}</script></div></body></html>

@@ -11,10 +11,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <script>
-    function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}
+    function getToken(){return '';}
     function getCookie(n){const v=document.cookie.match('(^|;) ?'+n+'=([^;]*)(;|$)');return v?v[2]:null;}
-    function clearToken(){localStorage.removeItem('token');document.cookie='token=; Max-Age=0; path=/';}
-    function logout(){clearToken();window.location.href='/auth/login';}
+    async function logout(){const c=await fetch('/api/auth/csrf').then(r=>r.json());await fetch('/api/auth/logout',{method:'POST',credentials:'include',headers:{[c.headerName]:c.token}});window.location.href='/auth/login';}
     </script>
     <th:block layout:fragment="extra_css"></th:block>
 </head>

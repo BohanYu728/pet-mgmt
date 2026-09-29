@@ -19,4 +19,4 @@ loadProducts('','');
 document.getElementById('speciesFilter').onchange=function(){loadProducts(this.value,document.getElementById('categoryFilter').value)};
 document.getElementById('categoryFilter').onchange=function(){loadProducts(document.getElementById('speciesFilter').value,this.value)};
 async function addCart(pid){const r=await fetch('/api/shop/api/cart',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+T},body:JSON.stringify({product_id:pid,quantity:1})});const j=await r.json();alert(j.message||j.error);}
-function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}</script></div></body></html>
+function getToken(){return null||null||'';}</script></div></body></html>

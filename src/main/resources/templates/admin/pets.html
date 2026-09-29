@@ -6,4 +6,4 @@ fetch('/api/admin/pets/list',{headers:{'Authorization':'Bearer '+T}}).then(r=>r.
     document.getElementById('table').innerHTML=`<table class="table table-hover"><thead><tr><th>ID</th><th>名字</th><th>主人</th><th>品种</th><th>操作</th></tr></thead><tbody>${d.pets.map(p=>`<tr><td>${p.id}</td><td>${p.name}</td><td>${p.owner_name||''}</td><td>${p.breed||''}</td><td><button class="btn btn-danger btn-sm" onclick="delPet(${p.id})">删除</button></td></tr>`).join('')}</tbody></table>`;
 });
 async function delPet(id){if(!confirm('确定删除?'))return;await fetch('/api/admin/pets/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+T}});location.reload();}
-function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}</script></div></body></html>
+function getToken(){return null||null||'';}</script></div></body></html>

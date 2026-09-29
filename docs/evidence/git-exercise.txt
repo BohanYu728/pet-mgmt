@@ -1,0 +1,41 @@
+> git init -b main
+Initialized empty Git repository in C:/Users/ybh/Desktop/李旻硕的作业/202432110227余柏翰宠物管家系统/pet-mgmt-java/.local/git-exercise/.git/
+> git config user.name Training Exercise
+> git config user.email training@local.invalid
+> git add exercise.txt
+> git commit -m exercise: base
+[main (root-commit) 517404f] exercise: base
+ 1 file changed, 1 insertion(+)
+ create mode 100644 exercise.txt
+> git switch -c feature/a
+Switched to a new branch 'feature/a'
+> git commit -am exercise: a
+[feature/a 8838cc7] exercise: a
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+> git switch main
+Switched to branch 'main'
+> git switch -c feature/b
+Switched to a new branch 'feature/b'
+> git commit -am exercise: b
+[feature/b a18f683] exercise: b
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+> git merge feature/a
+Auto-merging exercise.txt
+CONFLICT (content): Merge conflict in exercise.txt
+Automatic merge failed; fix conflicts and then commit the result.
+<<<<<<< HEAD
+version-b
+=======
+version-a
+>>>>>>> feature/a
+> git add exercise.txt
+> git commit -m exercise: reconcile both changes
+[feature/b 1793235] exercise: reconcile both changes
+> git log --oneline --graph --all
+*   1793235 exercise: reconcile both changes
+|\  
+| * 8838cc7 exercise: a
+* | a18f683 exercise: b
+|/  
+* 517404f exercise: base
+> git status --short

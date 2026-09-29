@@ -9,4 +9,4 @@ fetch('/api/admin/stats',{headers:{'Authorization':'Bearer '+T}}).then(r=>r.json
     <div class="col-md-3"><div class="card border-0 shadow-sm bg-warning bg-opacity-10"><div class="card-body text-center"><div class="fs-2 fw-bold text-warning">${d.merchant_count||0}</div><div>商户数</div></div></div></div>
     <div class="col-md-3"><div class="card border-0 shadow-sm bg-info bg-opacity-10"><div class="card-body text-center"><div class="fs-2 fw-bold text-info">${d.product_count||0}</div><div>商品数</div></div></div></div>`;
 });
-function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}</script></div></body></html>
+function getToken(){return null||null||'';}</script></div></body></html>

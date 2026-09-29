@@ -5,6 +5,8 @@ frontend/dist/
 .env.*
 !.env.example
 .local/
+.m2repo/
+.npm-cache/
 uploads/
 src/main/resources/static/uploads/
 *.log

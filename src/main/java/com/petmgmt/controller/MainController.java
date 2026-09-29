@@ -96,7 +96,7 @@ public class MainController {
         if (user == null) return ResponseEntity.status(401).body(Map.of("error", "请先登录"));
         if (q.isEmpty()) return ResponseEntity.ok(Map.of("pets", List.of(), "records", List.of()));
 
-        List<Pet> pets = petRepository.findByOwnerIdAndNameContainingOrBreedContaining(user.getId(), q, q);
+        List<Pet> pets = petRepository.searchOwned(user.getId(), q);
         return ResponseEntity.ok(Map.of(
             "pets", pets.stream().map(Pet::toDict).toList(),
             "records", List.of()

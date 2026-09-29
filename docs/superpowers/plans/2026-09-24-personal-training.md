@@ -17,36 +17,38 @@
 
 ## Task 1：基础、安全与用户管理
 
-- [ ] 配置 Java 17、MyBatis、OpenAPI 和 H2 测试环境；外置敏感配置。
-- [ ] 对未认证、CSRF、角色越权、登录 Cookie 和用户 CRUD 先写失败测试。
-- [ ] 实现角色权限表、MyBatis 用户 Mapper/Service/API，保护业务写接口。
-- [ ] 执行 Maven 测试，核对用户返回值不包含密码或令牌。
+- [x] 配置 Java 17、MyBatis、OpenAPI 和 H2 测试环境；外置敏感配置。
+- [x] 对未认证、CSRF、角色越权、登录 Cookie 和用户 CRUD 先写失败测试。
+- [x] 实现角色权限表、MyBatis 用户 Mapper/Service/API，保护业务写接口。
+- [x] 执行 Maven 测试，核对用户返回值不包含密码或令牌。
 
 接口：`/api/auth/csrf` 返回 token/headerName；`/api/auth/login` 设置 HttpOnly token Cookie；`/api/auth/profile` 返回 user；`/api/auth/logout` 清除 Cookie。用户管理 `/api/admin/users`。
 
 ## Task 2：完整 Vue 前端与业务接口
 
-- [ ] 盘点现有模板、API、实体和缺失的业务接口。
-- [ ] 创建 frontend 的 Vue/Vite/Router/Axios 工程及统一错误处理。
-- [ ] 迁移用户、宠物管理、健康/体重/提醒/相册/日志、医院、商城、商户、管理员及原有 AI 入口。
-- [ ] 补齐缺失的业务 REST Controller，保留对象归属校验。
-- [ ] 添加关键交互测试，执行 npm test 与 npm run build。
+- [x] 盘点现有模板、API、实体和缺失的业务接口。
+- [x] 创建 frontend 的 Vue/Vite/Router/Axios 工程及统一错误处理。
+- [x] 迁移用户、宠物管理、健康/体重/提醒/相册/日志、医院、商城、商户、管理员及原有 AI 入口。
+- [x] 补齐缺失的业务 REST Controller，保留对象归属校验。
+- [x] 添加关键交互测试，执行 npm test 与 npm run build。
 
 前端调用后端 `/api`；认证使用 credentials Cookie 与 CSRF 请求头，不保存 JWT。RAG `POST /api/assistant/ask` 请求 `{question}`，响应 `{answer,sources,status}`。
 
 ## Task 3：LLM SDK 与 RAG
 
-- [ ] 先测试切块、检索排序、无资料和无模型配置的返回行为。
-- [ ] 添加 SDK 客户端、资料切块、embedding、检索、引用校验和输入边界。
-- [ ] 实现 `/api/assistant/ask`，模型不可用时明确状态并显示资料。
-- [ ] 执行独立测试，实际模型未配置时如实记录限制。
+- [x] 先测试切块、检索排序、无资料和无模型配置的返回行为。
+- [x] 添加 SDK 客户端、资料切块、embedding、检索、引用校验和输入边界。
+- [x] 实现 `/api/assistant/ask`，模型不可用时明确状态并显示资料。
+- [x] 执行独立测试，实际模型未配置时如实记录限制。
 
 仅修改新 ai/rag 包、AssistantController、knowledge 资料和相应测试；依赖变更协调主代理完成。
 
 ## Task 4：集成、CI 和综合报告
 
-- [ ] 建立 Git 基线与 feature/personal-training 分支，排除密钥及运行数据。
-- [ ] 增加 PR 模板和后端/前端 CI，并执行对应本地命令。
-- [ ] 启动隔离演示环境，浏览器联调、保存截图，审查完整变更。
-- [ ] 同步项目 Markdown 报告，生成一份综合 Word 报告；逐实验记录步骤、代码、验证、总结反思与 AI 使用记录。
-- [ ] 渲染检查报告，提供运行入口和未验证外部条件清单。
+- [x] 建立 Git 基线与 feature/personal-training 分支，排除密钥及运行数据。
+- [x] 增加 PR 模板和后端/前端 CI，并执行对应本地命令。
+- [x] 启动隔离演示环境，浏览器联调、保存截图，审查完整变更。
+- [x] 同步项目 Markdown 报告，生成一份综合 Word 报告；逐实验记录步骤、代码、验证、总结反思与 AI 使用记录。
+- [x] 渲染检查报告，提供运行入口和未验证外部条件清单。
+
+最终本地验收：后端 34 项、前端 6 项、HTTP 40 项、浏览器页面 32 项、表单操作 9 项通过。单份 Word 综合报告 12 页，已逐页渲染检查。远程 PR/人工评审/云端 CI、真实模型、MySQL 迁移及实际 Java 17 运行时仍待外部环境验证。

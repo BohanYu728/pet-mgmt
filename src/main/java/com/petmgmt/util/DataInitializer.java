@@ -5,13 +5,16 @@ import com.petmgmt.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
+import com.petmgmt.security.RoleAssignmentService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Component
+@Profile("demo")
 public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
@@ -19,15 +22,18 @@ public class DataInitializer implements CommandLineRunner {
     private final HealthRecordRepository healthRecordRepository;
     private final ReminderRepository reminderRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleAssignmentService roles;
 
     public DataInitializer(UserRepository userRepository, PetRepository petRepository,
                            HealthRecordRepository healthRecordRepository,
-                           ReminderRepository reminderRepository, PasswordEncoder passwordEncoder) {
+                           ReminderRepository reminderRepository, PasswordEncoder passwordEncoder,
+                           RoleAssignmentService roles) {
         this.userRepository = userRepository;
         this.petRepository = petRepository;
         this.healthRecordRepository = healthRecordRepository;
         this.reminderRepository = reminderRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roles = roles;
     }
 
     @Override
@@ -46,6 +52,7 @@ public class DataInitializer implements CommandLineRunner {
         admin.setCreatedAt(LocalDateTime.now());
         admin.setUpdatedAt(LocalDateTime.now());
         userRepository.save(admin);
+        roles.assign(admin.getId(), "admin");
 
         // Create demo user
         User demo = new User();
@@ -57,6 +64,7 @@ public class DataInitializer implements CommandLineRunner {
         demo.setCreatedAt(LocalDateTime.now());
         demo.setUpdatedAt(LocalDateTime.now());
         userRepository.save(demo);
+        roles.assign(demo.getId(), "user");
 
         // Create demo pets
         Pet wangcai = new Pet();

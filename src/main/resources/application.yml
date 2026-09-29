@@ -6,8 +6,8 @@ spring:
     name: pet-mgmt-system
 
   datasource:
-    url: jdbc:mysql://localhost:3306/pet_mgmt_system?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8
-    username: root
+    url: ${DB_URL:jdbc:mysql://localhost:3306/pet_mgmt_system?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8}
+    username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
@@ -40,6 +40,18 @@ spring:
 jwt:
   secret: ${JWT_SECRET}
   expiration: 604800000  # 7 days in milliseconds
+
+app:
+  cors-origin: ${CORS_ORIGIN:http://localhost:5173,http://127.0.0.1:5173}
+  frontend-url: ${FRONTEND_URL:http://localhost:5173}
+  cookie-secure: ${COOKIE_SECURE:true}
+
+ai:
+  openai:
+    api-key: ${OPENAI_API_KEY:}
+    base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
+    chat-model: ${OPENAI_CHAT_MODEL:gpt-4.1-mini}
+    embedding-model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}
 
 # File upload
 upload:

@@ -2,34 +2,30 @@
 // 宠物管家 — 前端工具
 // ============================================================
 
-// ---- JWT Token Management ----
+// Legacy template helpers; the session token is held only by the HttpOnly cookie.
 function getToken() {
-    return localStorage.getItem('token');
+    return '';
 }
 
-function setToken(token) {
-    localStorage.setItem('token', token);
-    document.cookie = `token=${token}; path=/; max-age=604800; SameSite=Lax`;
-}
-
-function clearToken() {
-    localStorage.removeItem('token');
-    document.cookie = 'token=; path=/; max-age=0';
+async function clearToken() {
+    const csrf = await fetch('/api/auth/csrf', { credentials: 'include' }).then(r => r.json());
+    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include', headers: { [csrf.headerName]: csrf.token } });
 }
 
 // ---- Centralized API Request ----
 async function apiRequest(url, method = 'GET', data = null, isFormData = false) {
     const headers = {};
-    const token = getToken();
-    if (token) headers['Authorization'] = 'Bearer ' + token;
+    if (!['GET', 'HEAD', 'OPTIONS'].includes(method.toUpperCase())) {
+        const csrf = await fetch('/api/auth/csrf', { credentials: 'include' }).then(r => r.json());
+        headers[csrf.headerName] = csrf.token;
+    }
     if (!isFormData) headers['Content-Type'] = 'application/json';
 
-    const options = { method, headers };
+    const options = { method, headers, credentials: 'include' };
     if (data) options.body = isFormData ? data : JSON.stringify(data);
 
     const response = await fetch(url, options);
     if (response.status === 401) {
-        clearToken();
         window.location.href = '/auth/login';
         throw new Error('Unauthorized');
     }

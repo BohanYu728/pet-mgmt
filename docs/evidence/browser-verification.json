@@ -1,0 +1,189 @@
+{
+  "at": "2026-09-28T08:13:37.639Z",
+  "results": [
+    {
+      "route": "/login",
+      "name": "demo",
+      "passed": true
+    },
+    {
+      "name": "浏览器 JavaScript 无可读 JWT",
+      "passed": true
+    },
+    {
+      "route": "/dashboard",
+      "heading": "欢迎回到宠物管家 🐾",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/pets",
+      "heading": "我的宠物",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/pets/1/health",
+      "heading": "健康记录",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/pets/1/weights",
+      "heading": "体重追踪",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/pets/1/logs",
+      "heading": "日常日志",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/pets/1/photos",
+      "heading": "宠物相册",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/pets/1/reminders",
+      "heading": "疫苗与驱虫提醒",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/reminders",
+      "heading": "疫苗与驱虫提醒",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/profile",
+      "heading": "个人资料",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/shop/products",
+      "heading": "宠物商城",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/shop/cart",
+      "heading": "购物车",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/shop/orders",
+      "heading": "我的订单",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/community/hospitals",
+      "heading": "宠物医院",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/ai/breed",
+      "heading": "品种识别",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/ai/emotion",
+      "heading": "情绪分析",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/ai/health",
+      "heading": "健康报告",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/ai/recommend",
+      "heading": "商品推荐",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/ai/consultation",
+      "heading": "症状咨询",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/ai/assistant",
+      "heading": "宠物管家助手",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "name": "RAG 页面显示回答及引用",
+      "passed": true
+    },
+    {
+      "route": "/dashboard",
+      "heading": "欢迎回到宠物管家 🐾",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "name": "移动视口无横向溢出",
+      "passed": true
+    },
+    {
+      "route": "/login",
+      "name": "admin",
+      "passed": true
+    },
+    {
+      "route": "/admin/users",
+      "heading": "管理后台",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/admin/pets",
+      "heading": "管理后台",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/admin/merchants",
+      "heading": "管理后台",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/login",
+      "name": "demo_shop",
+      "passed": true
+    },
+    {
+      "route": "/merchant/products",
+      "heading": "商户中心",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/merchant/orders",
+      "heading": "商户中心",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "route": "/merchant/billing",
+      "heading": "商户中心",
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "errors": []
+}

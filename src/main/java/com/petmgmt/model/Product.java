@@ -68,7 +68,13 @@ public class Product {
         map.put("id", id);
         map.put("name", name);
         map.put("category", category);
-        map.put("category_display", "food".equals(category) ? "宠物食品" : "宠物玩具");
+        map.put("category_display", switch (category) {
+            case "food" -> "宠物食品";
+            case "toy" -> "宠物玩具";
+            case "accessory" -> "用品配件";
+            case "medicine" -> "健康护理";
+            default -> "其他";
+        });
         map.put("target_species", targetSpecies);
         map.put("target_species_display", speciesDisplay);
         map.put("description", description);

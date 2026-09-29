@@ -31,7 +31,7 @@ public class ShopService {
     public Map<String, Object> getProducts(int page, int perPage, String species, String category) {
         PageRequest pr = PageRequest.of(page - 1, perPage);
         Page<Product> result;
-        List<String> speciesList = species != null ? List.of(species) : List.of("dog", "cat", "both");
+        List<String> speciesList = species != null ? ("both".equals(species) ? List.of("both") : List.of(species, "both")) : List.of("dog", "cat", "both");
         if (category != null && species != null) {
             result = productRepository.findByIsActiveTrueAndTargetSpeciesInAndCategory(speciesList, category, pr);
         } else if (category != null) {
@@ -51,6 +51,8 @@ public class ShopService {
 
     @Transactional
     public ApiResponse<Map<String, Object>> createProduct(Map<String, Object> data, Long merchantId) {
+        String invalid = validateProduct(data, true);
+        if (invalid != null) return ApiResponse.error(invalid);
         Product p = new Product();
         p.setName((String) data.get("name"));
         p.setCategory((String) data.getOrDefault("category", "food"));
@@ -66,6 +68,8 @@ public class ShopService {
 
     @Transactional
     public ApiResponse<Map<String, Object>> updateProduct(Product p, Map<String, Object> data) {
+        String invalid = validateProduct(data, false);
+        if (invalid != null) return ApiResponse.error(invalid);
         if (data.containsKey("name")) p.setName((String) data.get("name"));
         if (data.containsKey("category")) p.setCategory((String) data.get("category"));
         if (data.containsKey("target_species")) p.setTargetSpecies((String) data.get("target_species"));
@@ -94,6 +98,8 @@ public class ShopService {
 
     @Transactional
     public ApiResponse<Map<String, Object>> addToCart(Long userId, Long productId, int quantity) {
+        if (quantity <= 0) return ApiResponse.error("购买数量必须为正整数");
+        if (userRepository.lockById(userId).isEmpty()) return ApiResponse.error("用户不存在");
         Product p = productRepository.findById(productId).orElse(null);
         if (p == null || !Boolean.TRUE.equals(p.getIsActive())) return ApiResponse.error("商品不存在或已下架");
         if (p.getStock() < quantity) return ApiResponse.error("库存不足");
@@ -102,6 +108,7 @@ public class ShopService {
         CartItem item;
         if (existing.isPresent()) {
             item = existing.get();
+            if ((long) item.getQuantity() + quantity > p.getStock()) return ApiResponse.error("累计数量超过库存");
             item.setQuantity(item.getQuantity() + quantity);
         } else {
             item = new CartItem();
@@ -115,6 +122,7 @@ public class ShopService {
 
     @Transactional
     public ApiResponse<Void> removeCartItem(Long itemId, Long userId) {
+        if (userRepository.lockById(userId).isEmpty()) return ApiResponse.error("用户不存在");
         CartItem item = cartItemRepository.findById(itemId).orElse(null);
         if (item == null || !item.getUserId().equals(userId)) return ApiResponse.error("购物车项不存在");
         cartItemRepository.delete(item);
@@ -123,6 +131,7 @@ public class ShopService {
 
     @Transactional
     public ApiResponse<Void> clearCart(Long userId) {
+        if (userRepository.lockById(userId).isEmpty()) return ApiResponse.error("用户不存在");
         cartItemRepository.deleteByUserId(userId);
         return ApiResponse.success("购物车已清空");
     }
@@ -130,10 +139,26 @@ public class ShopService {
     // ---- Orders ----
     @Transactional
     public ApiResponse<Map<String, Object>> checkout(Long userId, Map<String, Object> data) {
+        User user = userRepository.lockById(userId).orElse(null);
+        if (user == null) return ApiResponse.error("用户不存在");
         List<CartItem> cartItems = cartItemRepository.findByUserId(userId);
         if (cartItems.isEmpty()) return ApiResponse.error("购物车为空");
 
-        User user = userRepository.findById(userId).orElse(null);
+        // Duplicate legacy rows must count together before any stock is changed.
+        Map<Long, BasketLine> basket = new LinkedHashMap<>();
+        for (CartItem ci : cartItems) {
+            Product p = ci.getProduct();
+            if (p == null || p.getId() == null || !Boolean.TRUE.equals(p.getIsActive())) return ApiResponse.error("商品已下架");
+            if (ci.getQuantity() == null || ci.getQuantity() <= 0) return ApiResponse.error(p.getName() + " 数量无效");
+            BasketLine previous = basket.get(p.getId());
+            long totalQuantity = (long) ci.getQuantity() + (previous == null ? 0 : previous.quantity());
+            if (totalQuantity > Integer.MAX_VALUE) return ApiResponse.error(p.getName() + " 数量过大");
+            basket.put(p.getId(), new BasketLine(p, (int) totalQuantity));
+        }
+        for (BasketLine line : basket.values()) {
+            if (line.product().getStock() == null || line.product().getStock() < line.quantity())
+                return ApiResponse.error(line.product().getName() + " 库存不足");
+        }
 
         Order order = new Order();
         order.setUser(user);
@@ -148,20 +173,19 @@ public class ShopService {
 
         double total = 0;
         List<OrderItem> orderItems = new ArrayList<>();
-        for (CartItem ci : cartItems) {
-            Product p = ci.getProduct();
-            if (p.getStock() < ci.getQuantity()) return ApiResponse.error(p.getName() + " 库存不足");
+        for (BasketLine line : basket.values()) {
+            Product p = line.product();
+            if (productRepository.decrementStockIfAvailable(p.getId(), line.quantity()) != 1)
+                throw new ShopConflictException(p.getName() + " 库存已变化，请重试下单");
             OrderItem oi = new OrderItem();
             oi.setOrder(order);
             oi.setProduct(p);
             oi.setProductName(p.getName());
             oi.setProductPrice(p.getPrice());
-            oi.setQuantity(ci.getQuantity());
-            oi.setSubtotal(p.getPrice() * ci.getQuantity());
+            oi.setQuantity(line.quantity());
+            oi.setSubtotal(p.getPrice() * line.quantity());
             orderItems.add(oi);
             total += oi.getSubtotal();
-            p.setStock(p.getStock() - ci.getQuantity());
-            productRepository.save(p);
         }
 
         order.setTotalAmount(total);
@@ -189,17 +213,45 @@ public class ShopService {
     public ApiResponse<Map<String, Object>> updateOrderStatus(Long orderId, String status) {
         Order order = orderRepository.findById(orderId).orElse(null);
         if (order == null) return ApiResponse.error("订单不存在");
-        if (!Set.of("pending", "paid", "shipped", "delivered", "cancelled").contains(status)) {
+        if (status == null || !Set.of("pending", "paid", "shipped", "delivered", "cancelled").contains(status)) {
             return ApiResponse.error("无效的状态");
         }
+        if (status.equals(order.getStatus())) return ApiResponse.success("状态未改变", Map.of("order", order.toDict(true)));
+        Map<String, Set<String>> transitions = Map.of(
+            "pending", Set.of("paid", "cancelled"),
+            "paid", Set.of("shipped", "cancelled"),
+            "shipped", Set.of("delivered"),
+            "delivered", Set.of(), "cancelled", Set.of());
+        if (!transitions.getOrDefault(order.getStatus(), Set.of()).contains(status)) return ApiResponse.error("不允许的订单状态变更");
+        if (orderRepository.transitionStatusIfCurrent(orderId, order.getStatus(), status) != 1)
+            return ApiResponse.error("订单状态已变化，请刷新后重试");
         if ("cancelled".equals(status)) {
             for (OrderItem oi : order.getItems()) {
                 Product p = oi.getProduct();
-                if (p != null) { p.setStock(p.getStock() + oi.getQuantity()); productRepository.save(p); }
+                if (p != null && productRepository.incrementStock(p.getId(), oi.getQuantity()) != 1)
+                    throw new ShopConflictException("恢复库存失败，请重试");
             }
         }
         order.setStatus(status);
-        orderRepository.save(order);
         return ApiResponse.success("状态已更新", Map.of("order", order.toDict(true)));
+    }
+
+    private record BasketLine(Product product, int quantity) {}
+
+    private String validateProduct(Map<String, Object> data, boolean creating) {
+        if (creating || data.containsKey("name")) {
+            if (!(data.get("name") instanceof String name) || name.isBlank() || name.length() > 128) return "商品名称需为1至128个字符";
+        }
+        if (creating || data.containsKey("price")) {
+            if (!(data.get("price") instanceof Number price) || !Double.isFinite(price.doubleValue()) || price.doubleValue() < 0) return "价格必须为非负数";
+        }
+        if (data.containsKey("stock")) {
+            if (!(data.get("stock") instanceof Number stock) || !Double.isFinite(stock.doubleValue()) || stock.doubleValue() < 0 || stock.doubleValue() > Integer.MAX_VALUE || stock.doubleValue() != stock.intValue()) return "库存必须为非负整数";
+        }
+        if (data.containsKey("category") && (!(data.get("category") instanceof String category) || !Set.of("food", "toy", "accessory", "medicine", "other").contains(category))) return "无效的商品分类";
+        if (data.containsKey("target_species") && (!(data.get("target_species") instanceof String species) || !Set.of("dog", "cat", "both").contains(species))) return "无效的适用物种";
+        if (data.containsKey("is_active") && !(data.get("is_active") instanceof Boolean)) return "上架状态必须为布尔值";
+        if (data.containsKey("description") && !(data.get("description") instanceof String)) return "商品描述必须为文本";
+        return null;
     }
 }

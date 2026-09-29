@@ -5,7 +5,7 @@ import com.petmgmt.dto.LoginRequest;
 import com.petmgmt.dto.RegisterRequest;
 import com.petmgmt.model.User;
 import com.petmgmt.repository.UserRepository;
-import com.petmgmt.security.JwtTokenProvider;
+import com.petmgmt.security.RoleAssignmentService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +19,12 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final RoleAssignmentService roles;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleAssignmentService roles) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.roles = roles;
     }
 
     @Transactional
@@ -45,9 +45,9 @@ public class AuthService {
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.save(user);
+        roles.assign(user.getId(), "user");
 
-        String token = jwtTokenProvider.generateToken(user.getId());
-        return ApiResponse.success("注册成功", Map.of("token", token, "user", user.toDict()));
+        return ApiResponse.success("注册成功", Map.of("user", user.toDict()));
     }
 
     @Transactional
@@ -73,6 +73,7 @@ public class AuthService {
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.save(user);
+        roles.assign(user.getId(), "merchant");
 
         return ApiResponse.success("商户入驻申请已提交，请等待管理员审核", Map.of("user", user.toDict()));
     }
@@ -94,8 +95,7 @@ public class AuthService {
             return ApiResponse.error("您的商户账号正在审核中，请等待管理员审批");
         }
 
-        String token = jwtTokenProvider.generateToken(user.getId());
-        return ApiResponse.success("登录成功", Map.of("token", token, "user", user.toDict()));
+        return ApiResponse.success("登录成功", Map.of("user", user.toDict()));
     }
 
     @Transactional

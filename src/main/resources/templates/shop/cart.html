@@ -12,4 +12,4 @@ fetch('/api/shop/api/cart',{headers:{'Authorization':'Bearer '+T}}).then(r=>r.js
 });
 async function removeItem(id){await fetch('/api/shop/api/cart/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+T}});location.reload();}
 async function checkout(){const r=await fetch('/api/shop/api/orders',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+T},body:JSON.stringify({recipient_name:'买家',recipient_phone:'13800000000',address_province:'北京',address_city:'北京',address_district:'朝阳',address_detail:'测试地址'})});const j=await r.json();alert(j.message||j.error);if(j.message)location.href='/shop/orders';}
-function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}</script></div></body></html>
+function getToken(){return null||null||'';}</script></div></body></html>

@@ -65,15 +65,6 @@ public class AdminController {
         return ResponseEntity.ok(Map.of("users", result));
     }
 
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<?> deleteUser(Authentication auth, @PathVariable Long id) {
-        if (!isAdmin(auth)) return ResponseEntity.status(403).body(ApiResponse.error("需要管理员权限"));
-        Long myId = (Long) auth.getPrincipal();
-        if (id.equals(myId)) return ResponseEntity.badRequest().body(ApiResponse.error("不能删除自己"));
-        userRepository.deleteById(id);
-        return ResponseEntity.ok(ApiResponse.success("删除成功"));
-    }
-
     @GetMapping("/pets/list")
     public ResponseEntity<?> petsList(Authentication auth) {
         if (!isAdmin(auth)) return ResponseEntity.status(403).body(ApiResponse.error("需要管理员权限"));

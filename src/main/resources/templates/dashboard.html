@@ -21,4 +21,4 @@
 </div><div th:unless="${pets != null && !pets.isEmpty()}" class="text-center py-4 text-muted"><i class="bi bi-inbox fs-2 d-block mb-2"></i><p>还没有添加宠物，<a href="/pets/add">去添加</a></p></div></div></div>
 </div>
 <script th:inline="javascript">fetch('/api/stats',{headers:{'Authorization':'Bearer '+(getToken()||'')}}).then(r=>r.json()).then(d=>{if(d.total_records)document.getElementById('recordCount').textContent=d.total_records;if(d.ai_analyses)document.getElementById('aiCount').textContent=d.ai_analyses;}).catch(()=>{});
-function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1];}</script></div></body></html>
+function getToken(){return null||null;}</script></div></body></html>

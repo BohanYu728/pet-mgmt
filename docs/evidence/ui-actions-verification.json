@@ -1,0 +1,43 @@
+{
+  "at": "2026-09-29T01:47:26.002Z",
+  "environment": "isolated H2 demo",
+  "checks": [
+    {
+      "name": "管理员在页面新增用户",
+      "passed": true
+    },
+    {
+      "name": "管理员在页面修改用户",
+      "passed": true
+    },
+    {
+      "name": "管理员在页面删除测试用户",
+      "passed": true
+    },
+    {
+      "name": "宠物主人在页面新增宠物",
+      "passed": true
+    },
+    {
+      "name": "宠物主人在页面修改宠物",
+      "passed": true
+    },
+    {
+      "name": "宠物主人在页面删除测试宠物",
+      "passed": true
+    },
+    {
+      "name": "买家在页面加入购物车",
+      "passed": true
+    },
+    {
+      "name": "买家在页面提交订单",
+      "passed": true
+    },
+    {
+      "name": "买家在页面取消测试订单",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

@@ -90,6 +90,8 @@ public class PetController {
         if (user == null) return ResponseEntity.status(401).body(ApiResponse.error("请先登录"));
         Pet pet = petRepository.findById(id).orElse(null);
         if (pet == null) return ResponseEntity.notFound().build();
+        if (!pet.getOwner().getId().equals(user.getId()))
+            return ResponseEntity.status(403).body(ApiResponse.error("无权操作"));
         String path = FileUtils.saveUpload(file, "avatars");
         if (path == null) return ResponseEntity.badRequest().body(ApiResponse.error("不支持的图片格式"));
         if (pet.getAvatar() != null) FileUtils.deleteUpload(pet.getAvatar());

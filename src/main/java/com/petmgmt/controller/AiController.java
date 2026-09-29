@@ -43,13 +43,16 @@ public class AiController {
         User user = getUser(auth);
         if (user == null) return ResponseEntity.status(401).body(ApiResponse.error("请先登录"));
 
+        Pet pet = petId != null ? petRepository.findById(petId).orElse(null) : null;
+        if (petId != null && (pet == null || !user.getId().equals(pet.getOwner().getId())))
+            return ResponseEntity.status(403).body(ApiResponse.error("无权操作此宠物"));
+
         String imagePath = FileUtils.saveUpload(file, "ai");
         if (imagePath == null) return ResponseEntity.badRequest().body(ApiResponse.error("不支持的图片格式"));
 
         String fullPath = "src/main/resources/static/" + imagePath;
         Map<String, Object> result = aiService.predictBreed(fullPath);
 
-        Pet pet = petId != null ? petRepository.findById(petId).orElse(null) : null;
         BreedHistory bh = aiService.saveBreedHistory(user, pet, imagePath, result);
         result.put("history_id", bh.getId());
         result.put("image_url", "/" + imagePath);

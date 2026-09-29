@@ -87,16 +87,15 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     const btn = document.getElementById('loginBtn'), alert = document.getElementById('loginAlert');
     btn.disabled = true; alert.classList.add('d-none');
     try {
-        const res = await fetch('/auth/login', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
+        const csrf = await fetch('/api/auth/csrf').then(r => r.json());
+        const res = await fetch('/api/auth/login', {
+            method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json', [csrf.headerName]: csrf.token },
             body: JSON.stringify({ username: document.getElementById('username').value.trim(), password: document.getElementById('password').value, role: currentRole })
         });
         const data = await res.json();
         if (data.error) {
             alert.textContent = data.error; alert.classList.remove('d-none');
         } else {
-            localStorage.setItem('token', data.data.token);
-            document.cookie = 'token=' + data.data.token + '; path=/; max-age=604800';
             const dest = data.data.user.role === 'merchant' ? '/merchant' : data.data.user.role === 'admin' ? '/admin' : '/dashboard';
             location.href = dest;
         }

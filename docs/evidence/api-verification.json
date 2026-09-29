@@ -1,0 +1,206 @@
+{
+  "at": "2026-09-28T08:13:05.082Z",
+  "environment": "isolated H2 demo",
+  "checks": [
+    {
+      "name": "未登录访问宠物被拒绝",
+      "passed": true,
+      "details": "HTTP 401"
+    },
+    {
+      "name": "缺失 CSRF 被拒绝",
+      "passed": true,
+      "details": "HTTP 403"
+    },
+    {
+      "name": "demo 登录",
+      "passed": true,
+      "details": "HTTP 200"
+    },
+    {
+      "name": "demo 令牌不进入 JSON",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "admin 登录",
+      "passed": true,
+      "details": "HTTP 200"
+    },
+    {
+      "name": "admin 令牌不进入 JSON",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "demo_shop 登录",
+      "passed": true,
+      "details": "HTTP 200"
+    },
+    {
+      "name": "demo_shop 令牌不进入 JSON",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "JWT Cookie 启用 HttpOnly 和 SameSite",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "普通用户不能进入管理接口",
+      "passed": true,
+      "details": "HTTP 403"
+    },
+    {
+      "name": "MyBatis 新增用户",
+      "passed": true,
+      "details": "HTTP 201"
+    },
+    {
+      "name": "MyBatis 更新用户",
+      "passed": true,
+      "details": "HTTP 200 {\"user\":{\"id\":4,\"username\":\"verify83183977x\",\"email\":\"verify83183977@example.invalid\",\"phone\":\"13800000000\",\"avatar\":null,\"role\":\"user\",\"is_admin\":false,\"store_name\":null,\"store_phone\":null,\"rent_amount\":0,\"rent_due_day\":1,\"last_rent_paid\":null,\"is_approved\":true,\"created_at\":\"2026-09-28T16:13:04.118010\"}}"
+    },
+    {
+      "name": "MyBatis 读取用户且无密码字段",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "MyBatis 删除无关联用户",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "拒绝删除有关联宠物的用户",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "新增宠物",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "不同账号无法读取宠物",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "修改宠物",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "创建健康记录",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "健康记录自动生成提醒",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "记录体重",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "拒绝负数体重",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "创建日常日志",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "修改日常日志",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "公开商品接口有演示数据",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "拒绝负数购物车数量",
+      "passed": true,
+      "details": "HTTP 400"
+    },
+    {
+      "name": "加入购物车",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "提交订单",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "买家取消待付款订单",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "普通用户不能访问商户商品管理",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "商户读取自己的商品",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "医院查询",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "创建医院评价",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "拒绝无效评分",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "RAG 返回引用资料与真实状态",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "RAG 输入长度校验",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "删除健康记录及关联提醒",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "删除测试宠物",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "退出登录",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "退出后认证失效",
+      "passed": true,
+      "details": ""
+    }
+  ]
+}

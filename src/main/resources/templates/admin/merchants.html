@@ -6,4 +6,4 @@ fetch('/api/admin/merchants/list',{headers:{'Authorization':'Bearer '+T}}).then(
     document.getElementById('table').innerHTML=`<table class="table table-hover"><thead><tr><th>ID</th><th>店铺</th><th>用户名</th><th>状态</th><th>操作</th></tr></thead><tbody>${d.merchants.map(m=>`<tr><td>${m.id}</td><td>${m.store_name||''}</td><td>${m.username}</td><td>${m.is_approved?'已审核':'待审核'}</td><td>${!m.is_approved?`<button class="btn btn-success btn-sm" onclick="approve(${m.id})">审核通过</button>`:''}</td></tr>`).join('')}</tbody></table>`;
 });
 async function approve(id){await fetch('/api/admin/merchants/'+id+'/approve',{method:'POST',headers:{'Authorization':'Bearer '+T}});location.reload();}
-function getToken(){return localStorage.getItem('token')||document.cookie.split('; ').find(r=>r.startsWith('token='))?.split('=')[1]||'';}</script></div></body></html>
+function getToken(){return null||null||'';}</script></div></body></html>

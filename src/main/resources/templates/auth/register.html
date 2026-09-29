@@ -90,14 +90,11 @@ document.getElementById('regForm').addEventListener('submit', async function(e) 
         if (!body.storeName) { alert.textContent = '请输入店铺名称'; alert.classList.remove('d-none'); btn.disabled = false; return; } }
 
     try {
-        const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const csrf = await fetch('/api/auth/csrf').then(r => r.json());
+        const res = await fetch(url, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json', [csrf.headerName]: csrf.token }, body: JSON.stringify(body) });
         const data = await res.json();
         if (data.error) { alert.textContent = data.error; alert.classList.remove('d-none'); }
         else {
-            if (data.data && data.data.token) {
-                localStorage.setItem('token', data.data.token);
-                document.cookie = 'token=' + data.data.token + '; path=/; max-age=604800';
-            }
             success.textContent = data.message; success.classList.remove('d-none');
             setTimeout(() => { location.href = currentRole === 'merchant' ? '/' : '/dashboard'; }, 1500);
         }
