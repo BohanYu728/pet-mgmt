@@ -10,9 +10,11 @@ import CommunityView from './views/CommunityView.vue'
 import AiView from './views/AiView.vue'
 import AdminView from './views/AdminView.vue'
 import SearchView from './views/SearchView.vue'
+import DemoView from './views/DemoView.vue'
 import './style.css'
 
 const routes = [
+  { path: '/demo', component: DemoView },
   { path: '/', redirect: '/dashboard' },
   { path: '/login', component: AuthView, props: { mode: 'login' } },
   { path: '/register', component: AuthView, props: { mode: 'register' } },

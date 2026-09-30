@@ -27,6 +27,7 @@ public class DemoCatalogInitializer {
     }
 
     @EventListener(ApplicationReadyEvent.class)
+    @org.springframework.core.annotation.Order(0)
     @Transactional
     public void seed() {
         User merchant = users.findByUsername("demo_shop").orElseGet(() -> {

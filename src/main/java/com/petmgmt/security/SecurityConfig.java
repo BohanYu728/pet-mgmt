@@ -41,7 +41,7 @@ public class SecurityConfig {
             .exceptionHandling(errors -> errors.authenticationEntryPoint((request, response, exception) -> response.sendError(401)))
             .authorizeHttpRequests(auth -> auth
                 .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                .requestMatchers("/api/auth/csrf", "/api/auth/login", "/api/auth/register", "/api/auth/merchant/register",
+                .requestMatchers("/api/demo/status", "/api/auth/csrf", "/api/auth/login", "/api/auth/register", "/api/auth/merchant/register",
                     "/auth/login", "/auth/register", "/auth/merchant/register").permitAll()
                 .requestMatchers("/api/admin/**").hasAuthority("admin:manage")
                 .requestMatchers(HttpMethod.GET, "/api/shop/api/products/**", "/api/shop/products/**", "/api/hospitals/**").permitAll()

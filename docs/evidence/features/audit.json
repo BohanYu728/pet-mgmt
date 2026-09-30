@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-29T15:42:07.640Z",
+  "at": "2026-09-30T02:19:26.558Z",
   "environment": "isolated H2 demo port 8081",
   "checks": [
     {
@@ -13,7 +13,7 @@
       "detail": "HTTP 200 "
     },
     {
-      "name": "登录 show6501421",
+      "name": "登录 show4743590",
       "passed": true,
       "detail": "HTTP 200 "
     },
@@ -378,7 +378,7 @@
       "detail": "HTTP 200 "
     },
     {
-      "name": "登录 shop6501421",
+      "name": "登录 shop4743590",
       "passed": true,
       "detail": "HTTP 200 "
     },
@@ -739,7 +739,7 @@
       "id": "31-billing",
       "title": "租金账单查询",
       "route": "/merchant/billing",
-      "note": "账单查询接口可用；当前无演示账单，未提供在线缴费功能。"
+      "note": "账单查询接口可用，展示一笔虚构租金账单；未提供在线缴费功能。"
     },
     {
       "id": "32-logout",

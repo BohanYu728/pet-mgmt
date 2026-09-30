@@ -104,7 +104,7 @@ const upload=(file='cat-lifestyle.jpg')=>({name:file,mimeType:'image/jpeg',buffe
  await api(u,'POST','/shop/cart',{product_id:1,quantity:1},'商户订单准备');const mo=(await api(u,'POST','/shop/orders',address,'创建商户订单')).order;
  for(const status of ['paid','shipped','delivered'])await api(m,'PUT',`/shop/orders/${mo.id}/status`,{status},'商户订单状态 '+status);
  await snap(m,'30-merchant-orders','商户订单处理','/merchant/orders','验证待付款到已付款、已发货、已完成的状态流转；已付款仅为人工状态，不代表支付网关收款。');
- await snap(m,'31-billing','租金账单查询','/merchant/billing','账单查询接口可用；当前无演示账单，未提供在线缴费功能。');
+ await snap(m,'31-billing','租金账单查询','/merchant/billing','账单查询接口可用，展示一笔虚构租金账单；未提供在线缴费功能。');
  await api(m,'PUT',`/shop/products/${product.id}`,{is_active:false},'商品下架');await api(m,'DELETE',`/shop/products/${product.id}`,null,'删除测试商品');
  await api(u,'POST','/shop/cart',{product_id:1,quantity:1},'购物车移除准备');const cart=await api(u,'GET','/shop/cart',null,'读取购物车');await api(u,'DELETE',`/shop/cart/${cart.items[0].id}`,null,'移除购物车商品');
  await api(u,'POST','/shop/cart',{product_id:2,quantity:1},'购物车清空准备');await api(u,'POST','/shop/cart/clear',null,'清空购物车');

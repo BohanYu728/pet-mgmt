@@ -111,6 +111,7 @@ def main():
             table_rows.append(line.strip('|').split('|')); continue
         flush_table()
         if not line.strip() or line.strip() == '---': continue
+        if line.startswith('<!--'): continue
         match = re.match(r'!\[([^]]*)\]\(([^)]+)\)', line)
         if match:
             target = SOURCE.parent / match.group(2)
@@ -140,21 +141,28 @@ def main():
         if match:
             level = len(match.group(1)) - 1
             p = doc.add_heading(match.group(2), level)
+            if level == 1: showcase = False
+            if level == 2:
+                if showcase and match.group(2) != '功能展示': p.paragraph_format.page_break_before = True
+                showcase = match.group(2) == '功能展示'
+                if showcase:
+                    feature_number = 0
+                    p.paragraph_format.page_break_before = True
             if match.group(2) == '综合验证记录': compact_summary = True
             if match.group(2) == '功能逐项验证与展示':
                 showcase = True
                 compact_summary = False
                 p.paragraph_format.page_break_before = True
-            if showcase and level == 2 and match.group(2).startswith('功能 '):
+            if showcase and level == 3 and match.group(2).startswith(('功能 ', '样例')):
                 feature_number += 1
-                p.paragraph_format.page_break_before = feature_number % 2 == 1
+                p.paragraph_format.page_break_before = feature_number > 1 and feature_number % 2 == 1
             if level == 1 and (match.group(2).startswith('实验') or match.group(2) in ['项目内容与实现要求', '综合验证记录']):
                 p.paragraph_format.page_break_before = True
             continue
         p = doc.add_paragraph()
         if compact_summary:
-            p.paragraph_format.line_spacing = 1.15
-            p.paragraph_format.space_after = Pt(5)
+            p.paragraph_format.line_spacing = 1.05
+            p.paragraph_format.space_after = Pt(3)
         if line.startswith('- '): p.style = 'List Bullet'; line = line[2:]
         text_runs(p, line)
     flush_table()

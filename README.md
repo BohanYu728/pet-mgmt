@@ -7,7 +7,7 @@
 准备 JDK 17 或兼容版本、Maven、Node.js 22。后端编译目标为 Java 17。
 
 ```powershell
-mvn.cmd -Dmaven.repo.local=.m2repo verify
+mvn.cmd "-Dmaven.repo.local=.m2repo" verify
 java -jar target/pet-mgmt-java-1.0.0.jar --spring.profiles.active=demo
 ```
 
@@ -19,7 +19,7 @@ npm.cmd ci
 npm.cmd run dev
 ```
 
-访问 [Vue 页面](http://127.0.0.1:5173)；后端默认使用 8080 端口。演示账户为普通用户 `demo / demo123`、管理员 `admin / admin123`、商户 `demo_shop / demoShop123`，仅在 demo profile 的内存数据库中初始化；重启后演示数据清空。真实 MySQL 数据不会被演示模式读取或修改。演示商品及医院均为标明用途的虚构数据。
+访问 [样例体验中心](http://127.0.0.1:5173/demo)，选择宠物主人、商户或管理员一键进入。九个场景可直接操作，预置宠物、健康记录、提醒、体重、日志、商品、订单和虚构租金账单。所有修改经由正常业务接口，重启 demo 恢复初始样例。也可访问 [Vue 页面](http://127.0.0.1:5173)；后端默认使用 8080 端口。演示账户为普通用户 `demo / demo123`、管理员 `admin / admin123`、商户 `demo_shop / demoShop123`，仅在 demo profile 的内存数据库中初始化；重启后演示数据清空。真实 MySQL 数据不会被演示模式读取或修改。演示商品及医院均为标明用途的虚构数据。
 
 前端开发服务器将 `/api` 和 `/uploads` 转发到后端，认证通过 HttpOnly Cookie 携带 JWT；浏览器 JavaScript 只读取独立的 CSRF token。
 
@@ -60,7 +60,7 @@ RAG 助手使用独立的后端环境变量：
 ## 验证与文档
 
 ```powershell
-mvn.cmd -Dmaven.repo.local=.m2repo verify
+mvn.cmd "-Dmaven.repo.local=.m2repo" verify
 cd frontend
 npm.cmd test
 npm.cmd run build

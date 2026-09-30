@@ -6,6 +6,8 @@ import AppIcon from './components/AppIcon.vue'
 import AppPhoto from './components/AppPhoto.vue'
 const router = useRouter(), route = useRoute()
 const user = ref(null), menuOpen = ref(false), logoutError = ref('')
+const demoEnabled = ref(false)
+onMounted(async () => { try { demoEnabled.value = (await api.get('/demo/status')).data.enabled === true } catch { demoEnabled.value = false } })
 const authPage = computed(() => ['/login', '/register'].includes(route.path))
 async function refreshUser() { try { user.value = (await api.get('/auth/profile')).data.user } catch { user.value = null } }
 async function logout() { try { await api.post('/auth/logout'); user.value = null; router.push('/login') } catch (error) { logoutError.value = errorMessage(error) } }
@@ -20,7 +22,7 @@ const groups = [
   { title: '智能服务', links: [['/ai/assistant','sparkles','宠物管家助手'],['/ai/breed','scan','品种识别'],['/ai/emotion','smile','情绪分析'],['/ai/health','heart','健康报告'],['/ai/recommend','bag','商品推荐'],['/ai/consultation','chat','症状咨询']] }
 ]
 const roleLinks = computed(() => user.value?.role === 'admin' ? [['/admin/dashboard','chart','管理概览'],['/admin/users','user','用户管理'],['/admin/pets','paw','宠物管理'],['/admin/merchants','shield','商户审核']] : user.value?.role === 'merchant' ? [['/merchant/products','shop','商品管理'],['/merchant/orders','orders','商户订单'],['/merchant/billing','book','租金账单']] : [])
-const currentTitle = computed(() => [...groups.flatMap(group => group.links), ...roleLinks.value, ['/profile','user','个人资料']].find(link => link[0] === route.path)?.[2] || '宠物档案')
+const currentTitle = computed(() => [...groups.flatMap(group => group.links), ...roleLinks.value, ['/profile','user','个人资料'], ['/demo','paw','样例体验']].find(link => link[0] === route.path)?.[2] || '宠物档案')
 const roleLabel = computed(() => ({ admin: '管理员', merchant: '商户', user: '宠物主人' }[user.value?.role] || '欢迎来访'))
 </script>
 <template>
@@ -30,6 +32,7 @@ const roleLabel = computed(() => ({ admin: '管理员', merchant: '商户', user
       <RouterLink class="brand" to="/dashboard"><span class="brand-mark"><AppIcon name="paw" :size="27"/></span><span>宠物管家<small>PET COMPANION</small></span></RouterLink>
       <div v-if="!authPage" class="top-context"><span>生活有它，日常有序</span><i>/</i><strong>{{ currentTitle }}</strong></div>
       <nav class="top-actions" aria-label="账号导航">
+        <RouterLink v-if="demoEnabled" class="role-link" to="/demo">样例体验</RouterLink>
         <RouterLink v-if="user?.role === 'merchant'" class="role-link" to="/merchant/products">商户中心 <AppIcon name="arrow" :size="15"/></RouterLink>
         <RouterLink v-if="user?.role === 'admin'" class="role-link" to="/admin/dashboard">管理后台 <AppIcon name="arrow" :size="15"/></RouterLink>
         <RouterLink v-if="user" class="account-link" to="/profile"><AppPhoto v-if="user.avatar" class="account-avatar" :src="imageUrl(user.avatar)" alt="我的头像"/><span v-else class="account-monogram">{{ user.username?.slice(0, 1).toUpperCase() }}</span><span class="account-name">{{ user.username }}<small>{{ roleLabel }}</small></span></RouterLink>
@@ -41,6 +44,7 @@ const roleLabel = computed(() => ({ admin: '管理员', merchant: '商户', user
     <div class="content-shell">
       <button v-if="menuOpen && !authPage" class="menu-backdrop" aria-label="关闭导航菜单" @click="menuOpen = false"></button>
       <aside v-if="!authPage" id="site-navigation" class="sidebar" :class="{ open: menuOpen }"><nav aria-label="主要导航">
+        <div v-if="demoEnabled" class="nav-group"><RouterLink to="/demo"><AppIcon name="paw" :size="19"/><span>样例体验</span></RouterLink></div>
         <div v-if="roleLinks.length" class="nav-group"><div class="sidebar-caption">{{ user?.role === 'admin' ? '管理工作台' : '店铺工作台' }}</div><RouterLink v-for="[to, icon, label] in roleLinks" :key="to" :to="to"><AppIcon :name="icon" :size="19"/><span>{{ label }}</span><span class="active-dot"></span></RouterLink></div>
         <div v-for="group in groups" :key="group.title" class="nav-group"><div class="sidebar-caption">{{ group.title }}</div><RouterLink v-for="[to, icon, label] in group.links" :key="to" :to="to"><AppIcon :name="icon" :size="19"/><span>{{ label }}</span><span class="active-dot"></span></RouterLink></div>
       </nav><div class="sidebar-note"><AppIcon name="heart" :size="17"/><span>把每一份陪伴<br>记在日常里</span></div></aside>

@@ -1,38 +1,59 @@
-"""Append actual feature screenshots and bounded verification findings to the report."""
+"""Integrate verified demonstrations into their experiment chapters; safe to rerun."""
 import json
+import re
 from pathlib import Path
-
 root = Path(__file__).resolve().parents[1]
-data = json.loads((root / 'docs/evidence/features/audit.json').read_text(encoding='utf-8'))
-assert data['checks'] and all(item['passed'] for item in data['checks'])
-assert len(data['shots']) == 33
 source = root / 'docs/宠物管家系统个人技能实训综合报告.md'
+data = json.loads((root / 'docs/evidence/features/audit.json').read_text(encoding='utf-8'))
 text = source.read_text(encoding='utf-8').split('\n## 功能逐项验证与展示')[0].rstrip()
-text = text.replace('mvn.cmd -Dmaven.repo.local=.m2repo verify', 'mvn.cmd "-Dmaven.repo.local=.m2repo" verify')
-if '| 全功能补充实测 |' not in text:
-    text = text.replace('| 本地 Git 练习 |', '| 全功能补充实测 | 109 项检查通过，33 个展示场景 | 独立 H2 中进行接口写入、浏览器提交、结果展示与删除验证；不代表 AI 准确率 |\n| 本地 Git 练习 |')
-chapter = '''
+text = re.sub(r'\n<!-- demos:start -->.*?<!-- demos:end -->\n', '\n', text, flags=re.S)
+# Keep technical evidence and mobile layout, replace duplicate overview screenshots.
+text = re.sub(r'!\[[^]]*\]\(evidence/ui-refresh/(users-admin|dashboard-desktop|health-desktop|shop-desktop|login-desktop|ai-assistant-desktop|assistant-desktop|assistant-answer)\.png\)\n*', '', text)
+mapping = {1:[4,25,26,27], 2:[5,6,7,8,9,10,11,12,13,14,15,16,17,18,30,31,32], 3:[], 4:[1,2,3,28,29,33], 5:[19,20,21,22,23,24]}
+parts = re.split(r'(?=\n## )', text)
+feature_number = 0
+for i, part in enumerate(parts):
+    match = re.match(r'\n## 实验([一二三四五])', part)
+    if not match: continue
+    lab = '一二三四五'.index(match[1]) + 1
+    if not mapping[lab]: continue
+    block = '\n<!-- demos:start -->\n### 功能展示\n\n以下展示来自本地 H2 演示环境的实际操作，入口和验证范围随图说明。\n'
+    for number in mapping[lab]:
+        feature_number += 1
+        shot = data['shots'][number - 1]
+        note, image = shot['note'], f'evidence/features/{shot["id"]}.png'
+        if number == 32:
+            note = '当前内置一笔虚构租金账单，可查询金额与期间；仅供演示，没有实际扣款或在线缴费。'
+            image = 'evidence/demo/billing.png'
+        block += f'\n#### 功能 {feature_number:02d} {shot["title"]}\n\n入口：`{shot["route"]}`。{note}\n\n![{shot["title"]}实际展示]({image})\n'
+    if lab == 2:
+        block += '''
+#### 样例体验入口
 
-## 功能逐项验证与展示
+入口：`/demo`，也可以点击页面顶部“样例体验”。选择宠物主人、商户或管理员，会通过普通登录接口切换对应演示账号。九个场景按钮直达可操作页面。
 
-本轮在独立 H2 演示服务中完成 109 项功能与展示检查，保存 33 个实际界面场景；另行重新执行后端测试，34 项通过，0 失败、0 错误。演示过程不会读取或修改真实 MySQL 数据。下方按功能给出入口、实际操作、截图及限制，原始结果保存在 docs/evidence/features/audit.json。
+demo 环境预置两只宠物、三件商品、六条体重、两条日志、一笔待付款订单和一笔虚构租金账单，并保留原有健康记录、提醒与演示医院。修改立即生效，重启演示服务后恢复初始数据，不连接真实 MySQL。
 
-结论：本次覆盖的基础管理、照护、商城及后台操作流程通过；不能笼统宣称所有功能已达到生产可用。AI 页面能提交和返回内容，不等于输出准确；外部服务、真实数据迁移和线上支付需要单独验证。
+![样例体验与三种角色入口](evidence/demo/showcase.png)
 
-| 功能类别 | 当前结果 | 验证边界 |
-| --- | --- | --- |
-| 账号与日常管理 | 本次流程检查通过 | 注册登录、资料密码、头像、宠物、照护记录、相册、搜索 |
-| 医院与商城 | 本次流程检查通过 | 测试坐标、演示医院、评价、商品筛选、购物车、下单及取消 |
-| 管理员与商户 | 本次流程检查通过 | 用户与宠物管理、入驻审核、商品维护及订单状态流转 |
-| 品种与情绪识别 | 原型流程可用，算法能力受限 | 品种为颜色启发式猫分类，固定 75% 不是测得准确率；情绪来自图像特征规则 |
-| 健康报告 推荐 咨询 | 本地结果返回正常 | 本地模型或规则仅供参考，未验证真实外部模型；健康评分模型使用合成训练数据 |
-| RAG 助手 | 资料检索与引用展示通过 | 无真实模型凭据时展示 retrieval_only，不能标记为远程推理成功 |
-| 账单与支付 | 仅账单查询 | 当前无演示账单，未接入支付网关；商户修改已付款状态不代表真实收款 |
+#### 样例操作结果
 
-展示说明：照片、账号、收货信息、商品、医院和评价仅用于本地功能演示。截图覆盖主要入口及操作结果；同一页面中的新增、编辑、删除等操作合并说明，其实际请求结果保留在检查记录中。
+以宠物主人进入“生活日志”，编辑样例后保存，页面展示更新内容；成长趋势已有三次称重。普通用户与商户分别看到同一笔样例订单，可体验取消或状态处理。取消后可重新下单继续演示。
+
+![样例日志编辑保存结果](evidence/demo/logs.png)
+
+快捷入口仍使用 JWT、CSRF 与角色权限校验。`/api/demo/status` 仅在启用 demo profile 时返回虚构账号；其他环境返回 enabled=false。商户审核可配合注册页创建申请；AI 需要上传图片或输入问题后才产生结果，没有伪造分析历史。
 '''
-for index, shot in enumerate(data['shots'], 1):
-    title = shot['title']
-    chapter += f'\n### 功能 {index:02d} {title}\n\n入口：`{shot["route"]}`。{shot["note"]}\n\n![图{index + 9} {title}实际展示](evidence/features/{shot["id"]}.png)\n'
-source.write_text(text + chapter, encoding='utf-8')
-print(f'Updated report with {len(data["shots"])} feature demonstrations')
+    block += '\n<!-- demos:end -->\n'
+    marker = re.search(r'\n### (验证与总结反思|AI 安全与验证|关键边界与验证)', part)
+    parts[i] = part[:marker.start()] + block + part[marker.start():] if marker else part + block
+text = ''.join(parts)
+counter = 0
+def caption(match):
+    global counter
+    counter += 1
+    label = re.sub(r'^图\d+\s*', '', match[1])
+    return f'![图{counter} {label}]({match[2]})'
+text = re.sub(r'!\[([^]]*)\]\(([^)]+)\)', caption, text)
+source.write_text(text.rstrip() + '\n', encoding='utf-8')
+print(f'Integrated 33 feature scenes, 2 sample scenes, {counter} total figures')
