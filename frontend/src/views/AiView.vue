@@ -3,10 +3,40 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { api, allPets, errorMessage, imageUrl } from '../api'
 import AppIcon from '../components/AppIcon.vue'
 import AppPhoto from '../components/AppPhoto.vue'
+import { aiSamples } from '../aiSamples'
 const props = defineProps({ section: String })
 const page = computed(() => props.section || 'assistant')
 const pets = ref([]), petId = ref(''), image = ref(null), question = ref(''), answer = ref(null), history = ref([]), error = ref(''), busy = ref(false)
 const consultation = reactive({ species: 'dog', symptoms: '', duration: '', pet_id: null })
+const demoEnabled = ref(false), sampleLoading = ref(false), sampleMessage = ref(''), sampleImage = ref(''), fileInput = ref(null)
+const sample = computed(() => aiSamples[page.value])
+onMounted(async () => { try { demoEnabled.value = (await api.get('/demo/status')).data.enabled === true } catch { demoEnabled.value = false } })
+async function fillSample() {
+  sampleLoading.value = true; error.value = ''; sampleMessage.value = ''; answer.value = null
+  try {
+    const example = sample.value
+    if (example.species) {
+      await loadPets()
+      const pet = pets.value.find(p => p.species === example.species)
+      if (!pet && page.value !== 'breed') throw new Error('请先通过样例体验入口登录宠物主人，并确认对应宠物档案存在。')
+      petId.value = pet?.id || ''
+      if (page.value === 'consultation') Object.assign(consultation, { species: example.species, pet_id: pet.id, symptoms: example.symptoms, duration: example.duration })
+    }
+    if (example.question) question.value = example.question
+    if (example.image) {
+      const response = await fetch(example.image)
+      if (!response.ok) throw new Error('样例照片加载失败，请重试或上传自己的图片。')
+      const blob = await response.blob()
+      if (!blob.type.startsWith('image/')) throw new Error('样例文件不是图片，请上传自己的图片。')
+      image.value = new File([blob], 'sample-cat.jpg', { type: blob.type })
+      sampleImage.value = example.image
+      if (fileInput.value) fileInput.value.value = ''
+    }
+    sampleMessage.value = '样例已填入，可修改后提交。'
+  } catch (e) { error.value = e.response ? errorMessage(e) : e.message }
+  finally { sampleLoading.value = false }
+}
+function chooseImage(event) { image.value = event.target.files?.[0] || null; sampleImage.value = ''; sampleMessage.value = ''; answer.value = null }
 const options = [['assistant','宠物管家助手'],['breed','品种识别'],['emotion','情绪分析'],['health','健康报告'],['recommend','商品推荐'],['consultation','症状咨询']]
 const title = computed(() => Object.fromEntries(options)[page.value] || '宠物管家助手')
 async function loadPets() { try { pets.value = await allPets(); petId.value = pets.value[0]?.id || '' } catch {} }
@@ -27,15 +57,21 @@ function historyTitle(item) { return item.recognized_breed || item.emotion || it
 <template>
   <div class="page-head"><div><span class="section-eyebrow"><AppIcon name="sparkles" :size="15"/> 智能照护伙伴</span><h1>{{ title }}</h1><p>{{ page === 'assistant' ? '基于项目养宠资料回答常见问题，并显示参考出处' : '多一份了解，给毛孩子更细致的照顾' }}</p></div></div>
   <div class="tabs"><RouterLink v-for="[key,name] in options" :key="key" :to="`/ai/${key}`">{{ name }}</RouterLink></div>
+  <section v-if="demoEnabled && sample" class="ai-sample-panel" aria-label="AI 功能样例"><div><span class="section-eyebrow">可操作样例</span><h2>{{ sample.title }}</h2><p>{{ sample.description }}</p><small>{{ sample.boundary }}</small></div><button type="button" class="btn secondary" :disabled="busy || sampleLoading" @click="fillSample">{{ sampleLoading ? '加载样例…' : '填入样例' }}</button></section>
+  <div v-if="sampleMessage" class="message" role="status">{{ sampleMessage }}</div>
   <div v-if="error" class="message error">{{ error }}</div>
   <div class="two-col assistant-workspace"><form class="card assistant-form" @submit.prevent="submit"><h3><AppIcon name="chat" :size="19"/> {{ page === 'assistant' ? '今天想了解什么？' : title }}</h3>
     <label v-if="['breed','emotion','health','recommend'].includes(page)" class="field"><span>关联宠物{{ page === 'breed' ? '（可选）' : '' }}</span><select v-model="petId" :required="page !== 'breed'"><option v-if="page === 'breed'" value="">不关联</option><option v-for="pet in pets" :key="pet.id" :value="pet.id">{{ pet.name }}</option></select></label>
-    <label v-if="['breed','emotion'].includes(page)" class="field" style="margin-top:14px"><span>上传宠物照片</span><input type="file" accept="image/*" required @change="image=$event.target.files[0]"></label>
+    <label v-if="['breed','emotion'].includes(page)" class="field" style="margin-top:14px"><span>上传宠物照片</span><input ref="fileInput" type="file" accept="image/*" :required="!image" :disabled="sampleLoading || busy" @change="chooseImage"></label>
+    <div v-if="image && ['breed','emotion'].includes(page)" class="sample-image-preview"><AppPhoto v-if="sampleImage" :src="sampleImage" alt="待分析的样例照片" loading="eager"/><span>已选择：{{ image.name }}{{ sampleImage ? '（示例素材，可重新上传替换）' : '' }}</span></div>
     <label v-if="page === 'assistant'" class="field"><span>您的问题</span><textarea v-model.trim="question" maxlength="1000" required placeholder="例如：宠物疫苗到期后在哪里查看提醒？"></textarea></label>
     <div v-if="page === 'assistant'" class="question-suggestions"><span>试着问问</span><button v-for="suggestion in ['如何设置疫苗提醒？','在哪里记录宠物体重？','如何添加宠物档案？']" :key="suggestion" type="button" @click="question=suggestion">{{ suggestion }}</button></div><template v-if="page === 'consultation'"><label class="field"><span>宠物种类</span><select v-model="consultation.species"><option value="dog">狗狗</option><option value="cat">猫咪</option></select></label><label class="field" style="margin-top:12px"><span>关联宠物</span><select v-model="consultation.pet_id"><option :value="null">不关联</option><option v-for="pet in pets" :key="pet.id" :value="pet.id">{{ pet.name }}</option></select></label><label class="field" style="margin-top:12px"><span>症状描述</span><textarea v-model.trim="consultation.symptoms" maxlength="2000" required placeholder="请描述观察到的症状"></textarea></label><label class="field" style="margin-top:12px"><span>持续时间</span><input v-model.trim="consultation.duration" placeholder="例如：两天"></label></template>
     <p v-if="page === 'assistant' || page === 'consultation' || page === 'health'" class="warning">本功能仅供参考；如有紧急健康问题，请及时咨询兽医。</p>
-    <button class="btn" style="margin-top:17px" :disabled="busy || (['emotion','health','recommend'].includes(page) && !petId)">{{ busy ? '分析中…' : page === 'assistant' ? '发送问题' : '开始分析' }}</button>
+    <button class="btn" style="margin-top:17px" :disabled="busy || sampleLoading || (['emotion','health','recommend'].includes(page) && !petId)">{{ busy ? '分析中…' : page === 'assistant' ? '发送问题' : '开始分析' }}</button>
   </form><div class="card assistant-result"><h3><AppIcon name="sparkles" :size="19"/> 分析结果</h3><div v-if="answer"><div class="prewrap">{{ resultText() }}</div><AppPhoto v-if="answer.image_url" :src="imageUrl(answer.image_url)" alt="分析照片" class="pet-image" style="margin-top:15px;max-width:300px"/><div v-if="page === 'assistant' && answer.status" class="tag" style="margin-top:15px">状态：{{ answer.status }}</div><div v-if="answer.sources?.length" style="margin-top:20px"><strong>参考来源</strong><div v-for="(source,i) in answer.sources" :key="i" class="source"><strong>{{ source.title || source.source || source.file || source.id || '资料' }}</strong> · {{ source.section || source.chunk_id || '' }}<div v-if="source.excerpt" class="prewrap">{{ source.excerpt }}</div></div></div></div><div v-else class="result-empty"><AppIcon :name="busy ? 'clock' : 'sparkles'" :size="38"/><strong>{{ busy ? '正在整理信息' : '每个问题，都值得认真对待' }}</strong><span>{{ busy ? '请稍候，结果会显示在这里。' : '填写左侧内容，开始了解毛孩子。' }}</span></div></div></div>
   <div v-if="history.length" class="card" style="margin-top:20px"><h3>历史记录</h3><div v-for="item in history" :key="item.id" class="list-row"><div><strong>{{ historyTitle(item) }}</strong><p v-if="item.advice || item.care_tips || item.comfort_advice" class="small prewrap">{{ item.advice || item.care_tips || item.comfort_advice }}</p></div><span class="muted small">{{ item.created_at?.slice(0,16) }}</span></div></div>
 </template>
+<style scoped>
+.ai-sample-panel{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px 24px;margin-bottom:20px;border:1px solid #d9e8e5;background:#edf6f3;border-radius:17px}.ai-sample-panel h2{font-size:18px;margin:7px 0}.ai-sample-panel p{font-size:13px;margin:0 0 6px;line-height:1.7}.ai-sample-panel small{display:block;color:var(--muted);line-height:1.7}.ai-sample-panel .btn{flex-shrink:0}.sample-image-preview{display:flex;align-items:center;gap:14px;margin:14px 0;font-size:12px;color:var(--muted)}.sample-image-preview .photo-frame{width:100px;height:85px;flex-shrink:0;border-radius:10px}@media(max-width:600px){.ai-sample-panel{align-items:flex-start;flex-direction:column;gap:14px;padding:18px}.sample-image-preview{align-items:flex-start}}
+</style>
 <style scoped>.assistant-workspace{align-items:stretch}.assistant-form h3,.assistant-result h3{display:flex;align-items:center;gap:9px}.assistant-result h3 svg{color:var(--accent)}.assistant-form textarea{min-height:155px}.question-suggestions{display:flex;flex-wrap:wrap;gap:7px;margin:15px 0}.question-suggestions>span{width:100%;font-size:11px;color:var(--muted)}.question-suggestions button{background:#f4f7fa;color:#53687d;border:1px solid var(--line);border-radius:7px;padding:6px 9px;font-size:11px}.question-suggestions button:hover{background:#eaf3f5}.assistant-result{min-height:360px}.assistant-result .result-empty{min-height:270px}.assistant-result .prewrap{font-size:13px}@media(max-width:560px){.assistant-result{min-height:280px}.assistant-result .result-empty{min-height:180px}}</style>

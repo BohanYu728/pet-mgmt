@@ -63,7 +63,7 @@ def main():
     fld = OxmlElement('w:fldSimple'); fld.set(qn('w:instr'), 'PAGE'); footer._p.append(fld)
     footer.add_run(' 页')
     lines = SOURCE.read_text(encoding='utf-8-sig').splitlines()
-    in_code = False; code = []; table_rows = []; showcase = False; feature_number = 0; compact_summary = False
+    in_code = False; code = []; table_rows = []; showcase = False; feature_number = 0; compact_summary = False; ai_chapter = False
 
     def flush_table():
         nonlocal table_rows
@@ -79,7 +79,7 @@ def main():
             for cell, value in zip(cells, row):
                 text_runs(cell.paragraphs[0], value.strip())
                 for p in cell.paragraphs:
-                    p.paragraph_format.space_before = Pt(4); p.paragraph_format.space_after = Pt(5)
+                    p.paragraph_format.space_before = Pt(2 if compact_summary else 4); p.paragraph_format.space_after = Pt(3 if compact_summary else 5)
                     p.paragraph_format.line_spacing = 1.15
                     for run in p.runs: run.font.size = Pt(9.5); run.font.color.rgb = RGBColor(0,0,0)
                 if n == 0:
@@ -119,7 +119,7 @@ def main():
             p = doc.add_paragraph(); p.alignment = 1; p.paragraph_format.keep_with_next = True
             with Image.open(target) as image:
                 width, height = image.size
-            max_height = 3.1 if showcase else (4.5 if height > width else 3.65)
+            max_height = (4.8 if ai_chapter else 3.1) if showcase else (4.5 if height > width else 3.65)
             scale = min(6.65 / width, max_height / height)
             picture = p.add_run().add_picture(str(target), width=Inches(width * scale), height=Inches(height * scale))
             picture._inline.docPr.set('descr', match.group(1))
@@ -141,7 +141,9 @@ def main():
         if match:
             level = len(match.group(1)) - 1
             p = doc.add_heading(match.group(2), level)
-            if level == 1: showcase = False
+            if level == 1:
+                showcase = False
+                ai_chapter = match.group(2).startswith('实验五')
             if level == 2:
                 if showcase and match.group(2) != '功能展示': p.paragraph_format.page_break_before = True
                 showcase = match.group(2) == '功能展示'
@@ -155,11 +157,12 @@ def main():
                 p.paragraph_format.page_break_before = True
             if showcase and level == 3 and match.group(2).startswith(('功能 ', '样例')):
                 feature_number += 1
-                p.paragraph_format.page_break_before = feature_number > 1 and feature_number % 2 == 1
+                p.paragraph_format.page_break_before = feature_number > 1 and (ai_chapter or feature_number % 2 == 1)
             if level == 1 and (match.group(2).startswith('实验') or match.group(2) in ['项目内容与实现要求', '综合验证记录']):
                 p.paragraph_format.page_break_before = True
             continue
         p = doc.add_paragraph()
+        if showcase and line.startswith('入口：'): p.paragraph_format.keep_with_next = True
         if compact_summary:
             p.paragraph_format.line_spacing = 1.05
             p.paragraph_format.space_after = Pt(3)

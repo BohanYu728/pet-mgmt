@@ -1,0 +1,76 @@
+{
+  "checkedAt": "2026-09-30T02:32:54.342Z",
+  "checks": [
+    {
+      "section": "assistant",
+      "passed": true,
+      "status": 200,
+      "mode": "retrieval_only"
+    },
+    {
+      "section": "breed",
+      "passed": true,
+      "status": 200,
+      "mode": "local_or_configured"
+    },
+    {
+      "section": "emotion",
+      "passed": true,
+      "status": 200,
+      "mode": "local_or_configured"
+    },
+    {
+      "section": "health",
+      "passed": true,
+      "status": 200,
+      "mode": "local_or_configured"
+    },
+    {
+      "section": "recommend",
+      "passed": true,
+      "status": 200,
+      "mode": "local_or_configured"
+    },
+    {
+      "section": "consultation",
+      "passed": true,
+      "status": 200,
+      "mode": "local_or_configured"
+    }
+  ],
+  "shots": [
+    {
+      "section": "assistant",
+      "title": "资料问答"
+    },
+    {
+      "section": "breed",
+      "title": "品种识别"
+    },
+    {
+      "section": "emotion",
+      "title": "情绪分析"
+    },
+    {
+      "section": "health",
+      "title": "健康报告"
+    },
+    {
+      "section": "recommend",
+      "title": "商品推荐"
+    },
+    {
+      "section": "consultation",
+      "title": "症状咨询"
+    }
+  ],
+  "mobileOverflow": false,
+  "extraChecks": [
+    "six hub entries",
+    "no automatic submissions",
+    "manual photo replacement",
+    "photo failure and retry",
+    "non-demo entry hidden"
+  ],
+  "errors": []
+}

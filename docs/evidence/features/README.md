@@ -8,6 +8,8 @@
 
 限制：品种识别采用颜色规则，固定 75% 不是测得准确率；情绪分析使用启发式图像特征。健康报告、推荐、咨询验证的是本地结果；RAG 为资料检索降级。账单仅查询，支付网关、真实外部模型、MySQL 迁移和远程 CI 未在此轮验证。
 
-最终报告统一为 `宠物管家系统个人技能实训综合报告.docx`，32 页、38 张图。33 个功能展示分布于对应实验，另补充样例体验入口和日志操作结果，不再保留重复的功能展示版。构建顺序为 `scripts/update-feature-report.py`、`scripts/build-training-report.py`，再使用 Word 导出并检查分页。
+最终报告统一为 `宠物管家系统个人技能实训综合报告.docx`，35 页、38 张图。33 个功能展示分布于对应实验，另补充样例体验入口和日志操作结果，不再保留重复的功能展示版。构建顺序为 `scripts/update-feature-report.py`、`scripts/build-training-report.py`，再使用 Word 导出并检查分页。
 
 样例专项检查通过 10 项，见 `../demo/verification.json`，复现脚本为 `scripts/verify-demo.cjs`。该脚本使用 8080 的可丢弃 demo 环境并会编辑样例日志。
+
+AI 样例扩展：六项真实提交、手机布局和五类交互检查均通过。包括六个体验入口、填入不自动提交、手动替换照片、加载失败重试以及非 demo 隐藏入口。结果见 `../ai-samples/verification.json`，复现使用 `scripts/verify-ai-samples.cjs`，会在 demo 中产生真实分析历史。实验五的六张图已替换为本轮样例结果。
