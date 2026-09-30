@@ -4,12 +4,13 @@ import { useRouter, useRoute } from 'vue-router'
 import { api, errorMessage, imageUrl } from './api'
 import AppIcon from './components/AppIcon.vue'
 import AppPhoto from './components/AppPhoto.vue'
+import { currentUser as user, refreshUser } from './session'
+import { roleHome } from './roleAccess'
 const router = useRouter(), route = useRoute()
-const user = ref(null), menuOpen = ref(false), logoutError = ref('')
+const menuOpen = ref(false), logoutError = ref('')
 const demoEnabled = ref(false)
 onMounted(async () => { try { demoEnabled.value = (await api.get('/demo/status')).data.enabled === true } catch { demoEnabled.value = false } })
 const authPage = computed(() => ['/login', '/register'].includes(route.path))
-async function refreshUser() { try { user.value = (await api.get('/auth/profile')).data.user } catch { user.value = null } }
 async function logout() { try { await api.post('/auth/logout'); user.value = null; router.push('/login') } catch (error) { logoutError.value = errorMessage(error) } }
 provide('session', { user, refreshUser })
 function escapeMenu(event) { if (event.key === 'Escape') menuOpen.value = false }
@@ -21,6 +22,8 @@ const groups = [
   { title: '宠物生活', links: [['/community/hospitals','hospital','宠物医院'],['/shop/products','shop','宠物商城'],['/shop/cart','bag','购物车'],['/shop/orders','orders','我的订单']] },
   { title: '智能服务', links: [['/ai/assistant','sparkles','宠物管家助手'],['/ai/breed','scan','品种识别'],['/ai/emotion','smile','情绪分析'],['/ai/health','heart','健康报告'],['/ai/recommend','bag','商品推荐'],['/ai/consultation','chat','症状咨询']] }
 ]
+const visibleGroups = computed(() => user.value?.role === 'user' ? groups : [])
+const workspaceMessage = computed(() => ({user:'生活有它，日常有序',merchant:'店铺经营，清晰有序',admin:'平台管理，一目了然'}[user.value?.role] || '选择角色，开始体验'))
 const roleLinks = computed(() => user.value?.role === 'admin' ? [['/admin/dashboard','chart','管理概览'],['/admin/users','user','用户管理'],['/admin/pets','paw','宠物管理'],['/admin/merchants','shield','商户审核']] : user.value?.role === 'merchant' ? [['/merchant/products','shop','商品管理'],['/merchant/orders','orders','商户订单'],['/merchant/billing','book','租金账单']] : [])
 const currentTitle = computed(() => [...groups.flatMap(group => group.links), ...roleLinks.value, ['/profile','user','个人资料'], ['/demo','paw','样例体验']].find(link => link[0] === route.path)?.[2] || '宠物档案')
 const roleLabel = computed(() => ({ admin: '管理员', merchant: '商户', user: '宠物主人' }[user.value?.role] || '欢迎来访'))
@@ -29,8 +32,8 @@ const roleLabel = computed(() => ({ admin: '管理员', merchant: '商户', user
   <div class="site-shell" :class="{ 'auth-shell': authPage }">
     <a class="skip-link" href="#main-content">跳转到主要内容</a>
     <header class="topbar">
-      <RouterLink class="brand" to="/dashboard"><span class="brand-mark"><AppIcon name="paw" :size="27"/></span><span>宠物管家<small>PET COMPANION</small></span></RouterLink>
-      <div v-if="!authPage" class="top-context"><span>生活有它，日常有序</span><i>/</i><strong>{{ currentTitle }}</strong></div>
+      <RouterLink class="brand" :to="roleHome(user?.role)"><span class="brand-mark"><AppIcon name="paw" :size="27"/></span><span>宠物管家<small>PET COMPANION</small></span></RouterLink>
+      <div v-if="!authPage" class="top-context"><span>{{ workspaceMessage }}</span><i>/</i><strong>{{ currentTitle }}</strong></div>
       <nav class="top-actions" aria-label="账号导航">
         <RouterLink v-if="demoEnabled" class="role-link" to="/demo">样例体验</RouterLink>
         <RouterLink v-if="user?.role === 'merchant'" class="role-link" to="/merchant/products">商户中心 <AppIcon name="arrow" :size="15"/></RouterLink>
@@ -46,8 +49,8 @@ const roleLabel = computed(() => ({ admin: '管理员', merchant: '商户', user
       <aside v-if="!authPage" id="site-navigation" class="sidebar" :class="{ open: menuOpen }"><nav aria-label="主要导航">
         <div v-if="demoEnabled" class="nav-group"><RouterLink to="/demo"><AppIcon name="paw" :size="19"/><span>样例体验</span></RouterLink></div>
         <div v-if="roleLinks.length" class="nav-group"><div class="sidebar-caption">{{ user?.role === 'admin' ? '管理工作台' : '店铺工作台' }}</div><RouterLink v-for="[to, icon, label] in roleLinks" :key="to" :to="to"><AppIcon :name="icon" :size="19"/><span>{{ label }}</span><span class="active-dot"></span></RouterLink></div>
-        <div v-for="group in groups" :key="group.title" class="nav-group"><div class="sidebar-caption">{{ group.title }}</div><RouterLink v-for="[to, icon, label] in group.links" :key="to" :to="to"><AppIcon :name="icon" :size="19"/><span>{{ label }}</span><span class="active-dot"></span></RouterLink></div>
-      </nav><div class="sidebar-note"><AppIcon name="heart" :size="17"/><span>把每一份陪伴<br>记在日常里</span></div></aside>
+        <div v-for="group in visibleGroups" :key="group.title" class="nav-group"><div class="sidebar-caption">{{ group.title }}</div><RouterLink v-for="[to, icon, label] in group.links" :key="to" :to="to"><AppIcon :name="icon" :size="19"/><span>{{ label }}</span><span class="active-dot"></span></RouterLink></div>
+      </nav><div class="sidebar-note"><AppIcon name="heart" :size="17"/><span>{{ workspaceMessage }}</span></div></aside>
       <main id="main-content" class="main-content" tabindex="-1"><div v-if="logoutError" class="message error" role="alert">{{ logoutError }}</div><RouterView :key="$route.fullPath"/></main>
     </div>
     <footer><span class="footer-brand"><AppIcon name="paw" :size="15"/> 宠物管家</span><span>认真照顾，自在陪伴</span><span>© {{ new Date().getFullYear() }}</span></footer>

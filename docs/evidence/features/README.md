@@ -13,3 +13,5 @@
 样例专项检查通过 10 项，见 `../demo/verification.json`，复现脚本为 `scripts/verify-demo.cjs`。该脚本使用 8080 的可丢弃 demo 环境并会编辑样例日志。
 
 AI 样例扩展：六项真实提交、手机布局和五类交互检查均通过。包括六个体验入口、填入不自动提交、手动替换照片、加载失败重试以及非 demo 隐藏入口。结果见 `../ai-samples/verification.json`，复现使用 `scripts/verify-ai-samples.cjs`，会在 demo 中产生真实分析历史。实验五的六张图已替换为本轮样例结果。
+
+角色界面拆分：普通用户、商户、管理员的正常登录首页、独立导航、跨角色地址重定向、公共资料入口、样例筛选与手机菜单共 16 项检查通过；前端单测共 7 项通过。见 `../roles/verification.json`，复现脚本 `scripts/verify-role-workspaces.cjs`。本轮已重拍管理员、商户、样例中心及 AI 页面截图，报告引用随之更新。

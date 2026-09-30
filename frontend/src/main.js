@@ -11,6 +11,8 @@ import AiView from './views/AiView.vue'
 import AdminView from './views/AdminView.vue'
 import SearchView from './views/SearchView.vue'
 import DemoView from './views/DemoView.vue'
+import { canVisit, publicPages, roleHome } from './roleAccess'
+import { refreshUser } from './session'
 import './style.css'
 
 const routes = [
@@ -33,4 +35,11 @@ const routes = [
   { path: '/merchant/:section?', component: AdminView, props: true }
 ]
 const router = createRouter({ history: createWebHistory(), routes })
+// Navigation separation complements the existing backend authorization checks.
+router.beforeEach(async to => {
+  if (publicPages.includes(to.path)) return true
+  const user = await refreshUser()
+  if (!user) return '/login'
+  return canVisit(user.role, to.path) ? true : roleHome(user.role)
+})
 createApp(App).use(router).mount('#app')

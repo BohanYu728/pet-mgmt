@@ -11,8 +11,10 @@
     "skipped": 0
   },
   "all_images_match": true,
-  "sha256": "563c9a95caad572dd01a40159b96f51f3af23c04acc902f9a26902d3f78b7c05",
+  "sha256": "d479789ba14b324b7100944f22a5771621c9a868b55890e8f0d9cb6c419c9a01",
   "ai_sample_submissions": 6,
   "ai_sample_extra_checks": 5,
-  "ai_mobile_layout": true
+  "ai_mobile_layout": true,
+  "frontend_tests": 7,
+  "role_workspace_checks": 16
 }

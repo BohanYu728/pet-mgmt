@@ -1,5 +1,5 @@
 <script setup>
-import { inject, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { api, unwrap, errorMessage } from '../api'
 import AppPhoto from '../components/AppPhoto.vue'
@@ -22,6 +22,7 @@ const scenes = [
   ['账单查询', 'merchant', '/merchant/billing', '查看一笔虚构月租金账单，不会发生实际扣款。'],
   ['平台管理', 'admin', '/admin/users', '查看演示账号并体验新增用户；商户审核可配合注册页新建申请。']
 ]
+const visibleScenes = computed(() => scenes.filter(scene => scene[1] === session.user.value?.role))
 onMounted(async () => { try { demo.value = (await api.get('/demo/status')).data } catch (e) { failure.value = errorMessage(e) } })
 async function enter(role, path) {
   if (busy.value || !demo.value?.enabled) return
@@ -45,8 +46,8 @@ async function enter(role, path) {
     <template v-if="demo?.enabled">
       <div class="demo-notice">本地演示环境 · 账号、商品、地址与订单均为样例。修改立即生效，重启 demo 后恢复初始数据。切换体验将切换当前登录账号。</div>
       <section class="demo-roles" aria-label="选择体验角色"><article v-for="role in roles" :key="role.role" class="demo-role"><AppPhoto :src="`/images/${role.image}.jpg`" :alt="role.label + '体验配图'" class="demo-photo"/><div><span class="eyebrow">{{ role.label }}</span><h2>{{ role.intro }}</h2><p>{{ role.steps }}</p><button class="btn" :disabled="busy" @click="enter(role.role, role.route)">{{ busy ? '正在进入…' : '体验' + role.label }}</button></div></article></section>
-      <section aria-labelledby="scenes-title"><h2 id="scenes-title">按场景试一试</h2><div class="demo-scenes"><article v-for="[title, role, path, note] in scenes" :key="title" class="card"><span class="tag">{{ roles.find(r => r.role === role).label }}</span><h3>{{ title }}</h3><p>{{ note }}</p><button class="btn secondary" :disabled="busy" @click="enter(role, path)">打开样例</button></article></div></section>
-      <section aria-labelledby="ai-samples-title" style="margin-top:32px"><h2 id="ai-samples-title">AI 样例体验</h2><p class="muted">进入后点击“填入样例”，可编辑输入，再提交查看实际结果。</p><div class="demo-scenes"><article v-for="(sample,key) in aiSamples" :key="key" class="card"><span class="tag">智能服务</span><h3>{{ sample.title }}</h3><p>{{ sample.description }}</p><button class="btn secondary" :disabled="busy" @click="enter('user', '/ai/' + key)">体验{{ {assistant:'资料问答',breed:'品种识别',emotion:'情绪分析',health:'健康报告',recommend:'商品推荐',consultation:'症状咨询'}[key] }}</button></article></div></section>
+      <section v-if="visibleScenes.length" aria-labelledby="scenes-title"><h2 id="scenes-title">按场景试一试</h2><div class="demo-scenes"><article v-for="[title, role, path, note] in visibleScenes" :key="title" class="card"><span class="tag">{{ roles.find(r => r.role === role).label }}</span><h3>{{ title }}</h3><p>{{ note }}</p><button class="btn secondary" :disabled="busy" @click="enter(role, path)">打开样例</button></article></div></section>
+      <section v-if="session.user.value?.role === 'user'" aria-labelledby="ai-samples-title" style="margin-top:32px"><h2 id="ai-samples-title">AI 样例体验</h2><p class="muted">进入后点击“填入样例”，可编辑输入，再提交查看实际结果。</p><div class="demo-scenes"><article v-for="(sample,key) in aiSamples" :key="key" class="card"><span class="tag">智能服务</span><h3>{{ sample.title }}</h3><p>{{ sample.description }}</p><button class="btn secondary" :disabled="busy" @click="enter('user', '/ai/' + key)">体验{{ {assistant:'资料问答',breed:'品种识别',emotion:'情绪分析',health:'健康报告',recommend:'商品推荐',consultation:'症状咨询'}[key] }}</button></article></div></section>
     </template>
   </div>
 </template>

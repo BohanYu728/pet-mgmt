@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { api, errorMessage, unwrap, imageUrl } from '../api'
 import AppIcon from '../components/AppIcon.vue'
 import AppPhoto from '../components/AppPhoto.vue'
+import { roleHome } from '../roleAccess'
 
 const props = defineProps({ mode: String })
 const router = useRouter()
@@ -40,7 +41,7 @@ async function submit() {
     } else {
       const result = unwrap(await api.post('/auth/login', { username: form.username, password: form.password }))
       await session.refreshUser()
-      router.push(result?.user?.role === 'merchant' ? '/merchant/products' : '/dashboard')
+      router.push(roleHome(result?.user?.role))
     }
   } catch (e) { failure.value = e?.response ? errorMessage(e) : e.message }
   finally { busy.value = false }

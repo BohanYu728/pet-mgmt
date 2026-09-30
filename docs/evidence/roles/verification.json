@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-09-30T13:41:34.540Z",
+  "checks": [
+    "user normal login and navigation",
+    "user cross-role direct URLs redirected",
+    "user profile and brand home",
+    "user filtered sample center",
+    "user mobile navigation",
+    "merchant normal login and navigation",
+    "merchant cross-role direct URLs redirected",
+    "merchant profile and brand home",
+    "merchant filtered sample center",
+    "merchant mobile navigation",
+    "admin normal login and navigation",
+    "admin cross-role direct URLs redirected",
+    "admin profile and brand home",
+    "admin filtered sample center",
+    "admin mobile navigation",
+    "guest protected route redirects to login"
+  ],
+  "errors": []
+}
