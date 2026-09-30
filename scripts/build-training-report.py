@@ -1,5 +1,6 @@
 """Build the single combined report from verified Markdown and real evidence images."""
 from pathlib import Path
+import argparse
 import re
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor, Cm
@@ -31,6 +32,9 @@ def text_runs(p, text):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--output', type=Path, default=OUTPUT)
+    args = parser.parse_args()
     doc = Document()
     section = doc.sections[0]
     section.page_width = Cm(21); section.page_height = Cm(29.7)
@@ -59,7 +63,7 @@ def main():
     fld = OxmlElement('w:fldSimple'); fld.set(qn('w:instr'), 'PAGE'); footer._p.append(fld)
     footer.add_run(' 页')
     lines = SOURCE.read_text(encoding='utf-8-sig').splitlines()
-    in_code = False; code = []; table_rows = []
+    in_code = False; code = []; table_rows = []; showcase = False; feature_number = 0; compact_summary = False
 
     def flush_table():
         nonlocal table_rows
@@ -114,7 +118,7 @@ def main():
             p = doc.add_paragraph(); p.alignment = 1; p.paragraph_format.keep_with_next = True
             with Image.open(target) as image:
                 width, height = image.size
-            max_height = 4.5 if height > width else 3.65
+            max_height = 3.1 if showcase else (4.5 if height > width else 3.65)
             scale = min(6.65 / width, max_height / height)
             picture = p.add_run().add_picture(str(target), width=Inches(width * scale), height=Inches(height * scale))
             picture._inline.docPr.set('descr', match.group(1))
@@ -136,17 +140,28 @@ def main():
         if match:
             level = len(match.group(1)) - 1
             p = doc.add_heading(match.group(2), level)
+            if match.group(2) == '综合验证记录': compact_summary = True
+            if match.group(2) == '功能逐项验证与展示':
+                showcase = True
+                compact_summary = False
+                p.paragraph_format.page_break_before = True
+            if showcase and level == 2 and match.group(2).startswith('功能 '):
+                feature_number += 1
+                p.paragraph_format.page_break_before = feature_number % 2 == 1
             if level == 1 and (match.group(2).startswith('实验') or match.group(2) in ['项目内容与实现要求', '综合验证记录']):
                 p.paragraph_format.page_break_before = True
             continue
         p = doc.add_paragraph()
+        if compact_summary:
+            p.paragraph_format.line_spacing = 1.15
+            p.paragraph_format.space_after = Pt(5)
         if line.startswith('- '): p.style = 'List Bullet'; line = line[2:]
         text_runs(p, line)
     flush_table()
     doc.core_properties.title = '宠物管家系统个人技能实训综合报告'
     doc.core_properties.author = '余柏翰'
     doc.core_properties.subject = '第二部分 个人技能实训 实验一至实验五'
-    doc.save(OUTPUT)
-    print(OUTPUT)
+    doc.save(args.output)
+    print(args.output)
 
 if __name__ == '__main__': main()

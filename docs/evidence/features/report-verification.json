@@ -1,0 +1,14 @@
+{
+  "pages": 32,
+  "figures": 42,
+  "feature_demonstrations": 33,
+  "feature_checks_passed": 109,
+  "backend_tests": {
+    "tests": 34,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "all_images_match": true,
+  "sha256": "72b7f12ff5ed5365ba9603e86f3adf2abf416b3dc8bab5d6e8bd4497ce2e1501"
+}

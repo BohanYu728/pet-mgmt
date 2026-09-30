@@ -1,0 +1,752 @@
+{
+  "at": "2026-09-29T15:42:07.640Z",
+  "environment": "isolated H2 demo port 8081",
+  "checks": [
+    {
+      "name": "页面展示 普通用户注册",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "注册普通用户",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "登录 show6501421",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "新账号退出",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 账号登录",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "浏览器登录跳转",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "登录 admin",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "登录 demo_shop",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "保存个人资料",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "上传账号头像",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "修改密码",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "登录 demo",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "恢复演示密码",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 个人资料 头像与密码",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "上传宠物头像",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "新增宠物",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "编辑宠物",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 宠物档案与照片",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "新增健康记录",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "编辑健康记录",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 健康记录",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "新增提醒",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "修改并标记提醒已读",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 照护提醒",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "保存体重 2026-09-01",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "保存体重 2026-09-15",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "保存体重 2026-09-29",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 体重记录与趋势",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "新增日常日志",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "编辑日常日志",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 日常日志",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "上传相册照片",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 宠物相册",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 照护首页与统计",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "搜索宠物档案",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "搜索包含目标宠物",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 搜索档案",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 医院地图与附近搜索",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "附近医院查询",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 医院详情与评价",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 商城筛选与商品浏览",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "商城组合筛选",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 商品详情",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "加入购物车",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 购物车与收货信息",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "提交订单",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 订单列表与取消",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 订单明细",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "取消待付款订单",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "资料问答助手实际提交",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "资料问答助手有返回内容",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 资料问答助手",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "品种识别与历史实际提交",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "品种识别与历史有返回内容",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 品种识别与历史",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "情绪分析与历史实际提交",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "情绪分析与历史有返回内容",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 情绪分析与历史",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "健康报告实际提交",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "健康报告有返回内容",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 健康报告",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "商品推荐实际提交",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "商品推荐有返回内容",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 商品推荐",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "症状咨询与历史实际提交",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "症状咨询与历史有返回内容",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 症状咨询与历史",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 管理员统计",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "管理员修改测试用户",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 管理员用户管理",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 管理员宠物管理",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 商户注册入口",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "商户入驻申请",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 商户入驻审核",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "管理员审核商户",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "登录 shop6501421",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "商户新增商品",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "商户编辑商品",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "商户上传商品图片",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 商户商品管理",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "商户订单准备",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "创建商户订单",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "商户订单状态 paid",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "商户订单状态 shipped",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "商户订单状态 delivered",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "页面展示 商户订单处理",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 租金账单查询",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "商品下架",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "删除测试商品",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "购物车移除准备",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "读取购物车",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "移除购物车商品",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "购物车清空准备",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "清空购物车",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "管理员新增用户",
+      "passed": true,
+      "detail": "HTTP 201 "
+    },
+    {
+      "name": "删除管理员新增用户",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "宠物删除准备",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "宠物主人删除档案",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "忽略提醒",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "删除相册照片",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "删除日志",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "删除体重记录",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "删除提醒",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "删除健康记录",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "管理员删除测试宠物",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "管理员删除测试用户",
+      "passed": true,
+      "detail": "HTTP 200 "
+    },
+    {
+      "name": "浏览器退出登录",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "页面展示 退出登录",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "无未捕获浏览器错误",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "shots": [
+    {
+      "id": "01-register",
+      "title": "普通用户注册",
+      "route": "/register",
+      "note": "支持账号注册；下文通过接口提交新账号并登录核验。"
+    },
+    {
+      "id": "02-login",
+      "title": "账号登录",
+      "route": "/login",
+      "note": "实际使用演示账号完成登录；未登录请求和角色权限另有负向测试。"
+    },
+    {
+      "id": "03-profile",
+      "title": "个人资料 头像与密码",
+      "route": "/profile",
+      "note": "实际保存联系方式、上传头像，并以修改后的密码登录，随后恢复演示密码。"
+    },
+    {
+      "id": "04-pets",
+      "title": "宠物档案与照片",
+      "route": "/pets",
+      "note": "展示新增、编辑后的档案及上传头像；截图后删除本次临时档案。"
+    },
+    {
+      "id": "05-health",
+      "title": "健康记录",
+      "route": "/pets/1/health",
+      "note": "新增并修改健康记录，设置下次日期生成提醒；图中为演示资料。"
+    },
+    {
+      "id": "06-reminders",
+      "title": "照护提醒",
+      "route": "/reminders",
+      "note": "展示健康记录关联提醒与手动提醒；测试修改、标记已读和删除。"
+    },
+    {
+      "id": "07-weights",
+      "title": "体重记录与趋势",
+      "route": "/pets/1/weights",
+      "note": "实际写入三次体重并展示趋势；删除接口另行验证。"
+    },
+    {
+      "id": "08-logs",
+      "title": "日常日志",
+      "route": "/logs",
+      "note": "新增并更新日常照护记录；图中为本次演示数据。"
+    },
+    {
+      "id": "09-photos",
+      "title": "宠物相册",
+      "route": "/photos",
+      "note": "真实上传本地照片，展示图片与说明；素材仅用于功能演示。"
+    },
+    {
+      "id": "10-dashboard",
+      "title": "照护首页与统计",
+      "route": "/dashboard",
+      "note": "首页展示当前账号的宠物、提醒、统计和快捷入口。"
+    },
+    {
+      "id": "11-search",
+      "title": "搜索档案",
+      "route": "/search",
+      "note": "按关键词搜索当前账号宠物；当前接口不提供健康记录全文搜索。"
+    },
+    {
+      "id": "12-hospitals",
+      "title": "医院地图与附近搜索",
+      "route": "/community/hospitals",
+      "note": "使用浏览器测试坐标查询附近医院；底图依赖外部地图服务，医院为虚构演示数据。"
+    },
+    {
+      "id": "13-hospital-review",
+      "title": "医院详情与评价",
+      "route": "/community/hospitals",
+      "note": "通过页面提交五星演示评价，并刷新详情读取结果。"
+    },
+    {
+      "id": "14-shop",
+      "title": "商城筛选与商品浏览",
+      "route": "/shop/products",
+      "note": "按物种、分类和关键词筛选商品；价格和库存来自实际接口。"
+    },
+    {
+      "id": "15-product-detail",
+      "title": "商品详情",
+      "route": "/shop/products",
+      "note": "查看商品说明、库存、价格和图片。"
+    },
+    {
+      "id": "16-cart",
+      "title": "购物车与收货信息",
+      "route": "/shop/cart",
+      "note": "购物车显示商品、数量、合计及收货表单，实际接口下单验证如下。"
+    },
+    {
+      "id": "17-orders",
+      "title": "订单列表与取消",
+      "route": "/shop/orders",
+      "note": "创建待付款订单，验证详情读取及买家取消。该流程未调用真实支付。"
+    },
+    {
+      "id": "18-order-detail",
+      "title": "订单明细",
+      "route": "/shop/orders",
+      "note": "读取收货信息、商品行和金额；演示地址不用于配送。"
+    },
+    {
+      "id": "ai-assistant",
+      "title": "资料问答助手",
+      "route": "/ai/assistant",
+      "note": "返回项目资料和引用；未配置模型凭据时为 retrieval_only，不等于真实模型推理。"
+    },
+    {
+      "id": "ai-breed",
+      "title": "品种识别与历史",
+      "route": "/ai/breed",
+      "note": "上传猫照片并保存结果；现实现为颜色启发式猫分类且置信度固定 75%，不能视为可靠品种识别。"
+    },
+    {
+      "id": "ai-emotion",
+      "title": "情绪分析与历史",
+      "route": "/ai/emotion",
+      "note": "上传图片并保存结果；基于颜色、边缘等启发式特征，不能证明宠物实际情绪。"
+    },
+    {
+      "id": "ai-health",
+      "title": "健康报告",
+      "route": "/ai/health",
+      "note": "根据档案生成参考报告；本次验证本地降级结果，不代表医学诊断或远程大模型实测。"
+    },
+    {
+      "id": "ai-recommend",
+      "title": "商品推荐",
+      "route": "/ai/recommend",
+      "note": "根据宠物资料和在售商品生成参考推荐；本次验证本地算法返回。"
+    },
+    {
+      "id": "ai-consultation",
+      "title": "症状咨询与历史",
+      "route": "/ai/consultation",
+      "note": "提交描述并展示参考建议及历史；本次为本地规则结果，不替代兽医判断。"
+    },
+    {
+      "id": "25-admin-overview",
+      "title": "管理员统计",
+      "route": "/admin/dashboard",
+      "note": "统计用户、宠物、记录、商品、订单和分析次数。"
+    },
+    {
+      "id": "26-admin-users",
+      "title": "管理员用户管理",
+      "route": "/admin/users",
+      "note": "真实用户列表；管理员修改并删除本次注册的临时账号。"
+    },
+    {
+      "id": "27-admin-pets",
+      "title": "管理员宠物管理",
+      "route": "/admin/pets",
+      "note": "管理员查看宠物及所属用户，并删除临时测试档案。"
+    },
+    {
+      "id": "28a-merchant-register",
+      "title": "商户注册入口",
+      "route": "/register",
+      "note": "商户提交店铺名称及账号信息后进入待审核状态。"
+    },
+    {
+      "id": "28-merchant-approval",
+      "title": "商户入驻审核",
+      "route": "/admin/merchants",
+      "note": "展示待审核店铺，随后调用实际审核接口并验证商户可登录。"
+    },
+    {
+      "id": "29-merchant-products",
+      "title": "商户商品管理",
+      "route": "/merchant/products",
+      "note": "新增商品、编辑价格库存并上传真实图片；另行验证下架与删除。"
+    },
+    {
+      "id": "30-merchant-orders",
+      "title": "商户订单处理",
+      "route": "/merchant/orders",
+      "note": "验证待付款到已付款、已发货、已完成的状态流转；已付款仅为人工状态，不代表支付网关收款。"
+    },
+    {
+      "id": "31-billing",
+      "title": "租金账单查询",
+      "route": "/merchant/billing",
+      "note": "账单查询接口可用；当前无演示账单，未提供在线缴费功能。"
+    },
+    {
+      "id": "32-logout",
+      "title": "退出登录",
+      "route": "/login",
+      "note": "点击退出后返回登录页，已清除认证状态。"
+    }
+  ],
+  "errors": []
+}
