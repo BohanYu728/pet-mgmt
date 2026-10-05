@@ -51,7 +51,7 @@ def main():
         for border in list(style.element.iter(qn('w:pBdr'))):
             border.getparent().remove(border)
     normal = doc.styles['Normal'].paragraph_format
-    normal.line_spacing = 1.35; normal.space_after = Pt(7)
+    normal.line_spacing = 1.3; normal.space_after = Pt(6)
     normal.widow_control = True
     for name in ['Heading 1', 'Heading 2', 'Heading 3']:
         f = doc.styles[name].paragraph_format
@@ -64,6 +64,7 @@ def main():
     footer.add_run(' 页')
     lines = SOURCE.read_text(encoding='utf-8-sig').splitlines()
     in_code = False; code = []; table_rows = []; showcase = False; feature_number = 0; compact_summary = False; ai_chapter = False
+    contents_added = False
 
     def flush_table():
         nonlocal table_rows
@@ -79,6 +80,7 @@ def main():
             for cell, value in zip(cells, row):
                 text_runs(cell.paragraphs[0], value.strip())
                 for p in cell.paragraphs:
+                    p.paragraph_format.keep_with_next = n < len(rows) - 1
                     p.paragraph_format.space_before = Pt(2 if compact_summary else 4); p.paragraph_format.space_after = Pt(3 if compact_summary else 5)
                     p.paragraph_format.line_spacing = 1.15
                     for run in p.runs: run.font.size = Pt(9.5); run.font.color.rgb = RGBColor(0,0,0)
@@ -140,6 +142,17 @@ def main():
         match = re.match(r'^(#{2,4}) (.*)', line)
         if match:
             level = len(match.group(1)) - 1
+            if level == 1 and not contents_added:
+                title = doc.add_paragraph('目录', 'Subtitle')
+                title.paragraph_format.page_break_before = True
+                title.paragraph_format.space_after = Pt(20)
+                title.runs[0].font.size = Pt(20)
+                p = doc.add_paragraph()
+                field = OxmlElement('w:fldSimple')
+                field.set(qn('w:instr'), 'TOC \\o "1-1" \\h \\z')
+                p._p.append(field)
+                doc.add_paragraph('目录可点击跳转；修改正文后，在 Word 中更新目录即可同步页码。').runs[0].font.size = Pt(9)
+                contents_added = True
             p = doc.add_heading(match.group(2), level)
             if level == 1:
                 showcase = False

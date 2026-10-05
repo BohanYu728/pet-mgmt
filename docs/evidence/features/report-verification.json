@@ -1,6 +1,6 @@
 {
-  "pages": 35,
-  "figures": 38,
+  "pages": 36,
+  "figures": 37,
   "feature_demonstrations": 33,
   "feature_checks_passed": 109,
   "sample_checks_passed": 10,
@@ -11,10 +11,13 @@
     "skipped": 0
   },
   "all_images_match": true,
-  "sha256": "d479789ba14b324b7100944f22a5771621c9a868b55890e8f0d9cb6c419c9a01",
+  "sha256": "4b3952a7e284564f05f33003272699b05a9488e4ae8f4b43a68ff53bd265f5f9",
   "ai_sample_submissions": 6,
   "ai_sample_extra_checks": 5,
   "ai_mobile_layout": true,
   "frontend_tests": 7,
-  "role_workspace_checks": 16
+  "role_workspace_checks": 16,
+  "chapter_contents_verified": true,
+  "five_experiment_structures_verified": true,
+  "report_revision_date": "2026-10-05"
 }

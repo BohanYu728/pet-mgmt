@@ -11,7 +11,12 @@ try {
     $word = New-Object -ComObject Word.Application
     $word.Visible = $false
     $word.DisplayAlerts = 0
-    $document = $word.Documents.Open($source, $false, $true)
+    $document = $word.Documents.Open($source, $false, $false)
+    $document.Fields.Update() | Out-Null
+    foreach ($contents in $document.TablesOfContents) { $contents.Update() }
+    $document.Repaginate()
+    foreach ($contents in $document.TablesOfContents) { $contents.UpdatePageNumbers() }
+    $document.Save()
     $document.ExportAsFixedFormat($pdf, 17)
     Write-Output $pdf
 } finally {
