@@ -14,7 +14,7 @@ public class AssistantService {
     private volatile List<List<Double>> cachedEmbeddings;
 
     public AssistantService(List<KnowledgeChunk> chunks, AiGateway gateway) {
-        this.chunks = List.copyOf(chunks);
+        this.chunks = chunks.stream().filter(c -> AiSafetyGuard.inspect(c.title()+"。"+c.text()) == null).toList();
         this.gateway = gateway;
     }
 
@@ -24,6 +24,9 @@ public class AssistantService {
             throw new IllegalArgumentException("问题须为1至1000字的普通文本");
         }
         String clean = question.trim();
+        String risk = AiSafetyGuard.inspect(clean);
+        if (risk != null) return new AskResult(risk, List.of(), "safety_blocked",
+                new Safety(true, "input_blocked", risk));
         List<KnowledgeChunk> selected;
         if (!gateway.available()) {
             selected = lexical(clean);
@@ -33,6 +36,11 @@ public class AssistantService {
             selected = vector(clean);
             if (selected.isEmpty()) return new AskResult("资料中没有找到相关内容。", List.of(), "no_sources");
             String answer = gateway.answer(clean, selected);
+            if (answer != null && AiSafetyGuard.inspect(answer) != null) {
+                AskResult safe = fallback(selected);
+                return new AskResult(safe.answer(), safe.sources(), safe.status(),
+                        new Safety(true, "output_blocked", "已隐藏包含风险内容的模型回答，仅展示已筛选的项目资料。"));
+            }
             List<Source> cited = citedSources(answer, selected);
             if (cited.isEmpty()) return fallback(selected);
             return new AskResult(answer, cited, "answered");
@@ -113,5 +121,10 @@ public class AssistantService {
     public record Source(String id, String title, String excerpt) {
         static Source from(KnowledgeChunk chunk) { return new Source(chunk.id(), chunk.title(), chunk.text()); }
     }
-    public record AskResult(String answer, List<Source> sources, String status) {}
+    public record Safety(boolean enabled, String decision, String reason) {}
+    public record AskResult(String answer, List<Source> sources, String status, Safety safety) {
+        public AskResult(String answer, List<Source> sources, String status) {
+            this(answer, sources, status, new Safety(true, "passed", "已完成规则检查；不代表完全安全，回答仍需核对。"));
+        }
+    }
 }

@@ -1,6 +1,6 @@
 {
-  "pages": 36,
-  "figures": 37,
+  "pages": 83,
+  "figures": 49,
   "feature_demonstrations": 33,
   "feature_checks_passed": 109,
   "sample_checks_passed": 10,
@@ -11,7 +11,7 @@
     "skipped": 0
   },
   "all_images_match": true,
-  "sha256": "4b3952a7e284564f05f33003272699b05a9488e4ae8f4b43a68ff53bd265f5f9",
+  "sha256": "81829887289efb48dcea3636d3cd41a2c009c0239c3aecc824f4071479dce372",
   "ai_sample_submissions": 6,
   "ai_sample_extra_checks": 5,
   "ai_mobile_layout": true,
@@ -19,5 +19,21 @@
   "role_workspace_checks": 16,
   "chapter_contents_verified": true,
   "five_experiment_structures_verified": true,
-  "report_revision_date": "2026-10-05"
+  "report_revision_date": "2026-10-08",
+  "uml_diagrams": 10,
+  "tables": 13,
+  "template_geometry_matches": true,
+  "original_template_unchanged": true,
+  "test_evidence_date": "2026-09-30",
+  "application_tests_rerun_for_report_revision": false,
+  "normalized_by_word": [
+    "word/webSettings.xml",
+    "word/fontTable.xml"
+  ],
+  "report_filename": "宠物管家系统个人技能实训综合报告_AI图完善版.docx",
+  "added_content_characters": 6417,
+  "visual_review_complete": true,
+  "unchanged_body_pages_matched": 73,
+  "changed_body_pages_reviewed": 10,
+  "ai_related_uml_diagrams": 5
 }

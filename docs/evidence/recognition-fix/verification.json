@@ -1,0 +1,157 @@
+{
+  "checks": [
+    {
+      "section": "breed",
+      "file": "border-collie-sample.jpg",
+      "response": {
+        "species": "dog",
+        "analysis_mode": "mobilenetv2_imagenet",
+        "name_zh": "边境牧羊犬（犬类候选）",
+        "breed_name": "边境牧羊犬（犬类候选）",
+        "confidence": 60.92,
+        "species_confidence": 99.92,
+        "description": "图片模型判断为狗狗。候选品种与模型分数仅供参考，不是准确率；混种、遮挡和背景可能影响结果。",
+        "care_tips": "请根据实际宠物档案安排照护，不应依据照片候选品种决定健康处理。",
+        "history_id": 1,
+        "image_url": "/uploads/ai/22181bf9b304453b8edeac13d42b056c.jpg"
+      }
+    },
+    {
+      "section": "breed",
+      "file": "dog-lifestyle.jpg",
+      "response": {
+        "species": "dog",
+        "analysis_mode": "mobilenetv2_imagenet",
+        "name_zh": "kuvasz（犬类候选）",
+        "breed_name": "kuvasz（犬类候选）",
+        "confidence": 76.92,
+        "species_confidence": 99.94,
+        "description": "图片模型判断为狗狗。候选品种与模型分数仅供参考，不是准确率；混种、遮挡和背景可能影响结果。",
+        "care_tips": "请根据实际宠物档案安排照护，不应依据照片候选品种决定健康处理。",
+        "history_id": 2,
+        "image_url": "/uploads/ai/58fbc303b14c40dc89de80ff32fc831c.jpg"
+      }
+    },
+    {
+      "section": "breed",
+      "file": "cat-lifestyle.jpg",
+      "response": {
+        "species": "cat",
+        "analysis_mode": "mobilenetv2_imagenet",
+        "name_zh": "波斯猫（猫类候选）",
+        "breed_name": "波斯猫（猫类候选）",
+        "confidence": 99.87,
+        "species_confidence": 99.93,
+        "description": "图片模型判断为猫咪。候选品种与模型分数仅供参考，不是准确率；混种、遮挡和背景可能影响结果。",
+        "care_tips": "请根据实际宠物档案安排照护，不应依据照片候选品种决定健康处理。",
+        "history_id": 3,
+        "image_url": "/uploads/ai/81aa2e1289d5443290b6caf560bd4972.jpg"
+      }
+    },
+    {
+      "section": "emotion",
+      "file": "dog-lifestyle.jpg",
+      "response": {
+        "species": "dog",
+        "analysis_mode": "local_clip_zero_shot",
+        "confidence": null,
+        "comfort_advice": "主要候选：开心或活跃，图文相似度 0.2626。结果是本地视觉模型对图片与状态描述的相似度推测，未经宠物情绪数据集校准，不能证明真实情绪。请观察耳朵、尾巴、姿态、活动与拍摄前后的行为，结合持续记录判断。",
+        "emotion": "uncertain",
+        "emotion_zh": "可能开心或活跃（候选接近，暂无法确定）",
+        "similarity": 0.2626,
+        "candidates": [
+          {
+            "similarity": 0.2626,
+            "label": "开心或活跃",
+            "emotion": "happy"
+          },
+          {
+            "similarity": 0.2625,
+            "label": "生气或防御",
+            "emotion": "angry"
+          },
+          {
+            "similarity": 0.2597,
+            "label": "紧张或害怕",
+            "emotion": "anxious"
+          },
+          {
+            "similarity": 0.2576,
+            "label": "放松",
+            "emotion": "relaxed"
+          },
+          {
+            "similarity": 0.2571,
+            "label": "警觉或好奇",
+            "emotion": "alert"
+          },
+          {
+            "similarity": 0.2382,
+            "label": "困倦",
+            "emotion": "sleepy"
+          }
+        ],
+        "uncertainty_note": "不同状态的相似度接近，请结合行为观察。",
+        "history_id": 2,
+        "image_url": "/uploads/ai/455950e4b5bc4f4381c57fb5fa19310e.jpg"
+      }
+    },
+    {
+      "section": "emotion",
+      "file": "cat-lifestyle.jpg",
+      "response": {
+        "species": "cat",
+        "analysis_mode": "local_clip_zero_shot",
+        "confidence": null,
+        "comfort_advice": "主要候选：开心或活跃，图文相似度 0.2898。结果是本地视觉模型对图片与状态描述的相似度推测，未经宠物情绪数据集校准，不能证明真实情绪。请观察耳朵、尾巴、姿态、活动与拍摄前后的行为，结合持续记录判断。",
+        "emotion": "uncertain",
+        "emotion_zh": "可能开心或活跃（候选接近，暂无法确定）",
+        "similarity": 0.2898,
+        "candidates": [
+          {
+            "similarity": 0.2898,
+            "label": "开心或活跃",
+            "emotion": "happy"
+          },
+          {
+            "similarity": 0.2871,
+            "label": "生气或防御",
+            "emotion": "angry"
+          },
+          {
+            "similarity": 0.2856,
+            "label": "紧张或害怕",
+            "emotion": "anxious"
+          },
+          {
+            "similarity": 0.2779,
+            "label": "警觉或好奇",
+            "emotion": "alert"
+          },
+          {
+            "similarity": 0.2754,
+            "label": "放松",
+            "emotion": "relaxed"
+          },
+          {
+            "similarity": 0.2671,
+            "label": "困倦",
+            "emotion": "sleepy"
+          }
+        ],
+        "uncertainty_note": "不同状态的相似度接近，请结合行为观察。",
+        "history_id": 3,
+        "image_url": "/uploads/ai/f9b72551103047fca84ba71d69e1776c.jpg"
+      }
+    },
+    {
+      "section": "breed",
+      "invalidImageStatus": 400
+    },
+    {
+      "section": "emotion",
+      "invalidImageStatus": 400
+    }
+  ],
+  "errors": []
+}

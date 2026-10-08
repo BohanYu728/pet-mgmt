@@ -51,7 +51,16 @@ public class AiController {
         if (imagePath == null) return ResponseEntity.badRequest().body(ApiResponse.error("不支持的图片格式"));
 
         String fullPath = "src/main/resources/static/" + imagePath;
-        Map<String, Object> result = aiService.predictBreed(fullPath);
+        Map<String, Object> result;
+        try { result = aiService.predictBreed(fullPath); }
+        catch (IllegalArgumentException ex) {
+            FileUtils.deleteUpload(imagePath);
+            return ResponseEntity.badRequest().body(ApiResponse.error(ex.getMessage()));
+        }
+        catch (IllegalStateException ex) {
+            FileUtils.deleteUpload(imagePath);
+            return ResponseEntity.status(503).body(ApiResponse.error("图片识别服务暂不可用，请稍后重试"));
+        }
 
         BreedHistory bh = aiService.saveBreedHistory(user, pet, imagePath, result);
         result.put("history_id", bh.getId());
@@ -82,7 +91,16 @@ public class AiController {
         if (imagePath == null) return ResponseEntity.badRequest().body(ApiResponse.error("不支持的图片格式"));
 
         String fullPath = "src/main/resources/static/" + imagePath;
-        Map<String, Object> result = aiService.predictEmotion(fullPath);
+        Map<String, Object> result;
+        try { result = aiService.predictEmotion(fullPath); }
+        catch (IllegalArgumentException ex) {
+            FileUtils.deleteUpload(imagePath);
+            return ResponseEntity.badRequest().body(ApiResponse.error(ex.getMessage()));
+        }
+        catch (IllegalStateException ex) {
+            FileUtils.deleteUpload(imagePath);
+            return ResponseEntity.status(503).body(ApiResponse.error("图片识别服务暂不可用，请稍后重试"));
+        }
         EmotionHistory eh = aiService.saveEmotionHistory(user, pet, imagePath, result);
         result.put("history_id", eh.getId());
         result.put("image_url", "/" + imagePath);
@@ -92,6 +110,7 @@ public class AiController {
     @GetMapping("/emotion/data/{petId}")
     public ResponseEntity<?> emotionData(Authentication auth, @PathVariable Long petId) {
         User user = getUser(auth);
+        if (user == null) return ResponseEntity.status(401).body(ApiResponse.error("请先登录"));
         Pet pet = petRepository.findById(petId).orElse(null);
         if (pet == null || !pet.getOwner().getId().equals(user.getId()))
             return ResponseEntity.status(403).body(ApiResponse.error("无权访问"));

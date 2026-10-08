@@ -30,15 +30,7 @@ public class AiService {
     }
 
     public Map<String, Object> predictBreed(String imagePath) {
-        Map<String, Object> colorInfo = BreedModel.analyzeCatColor(imagePath);
-        String[] catResult = BreedModel.catFromColorOnly(colorInfo);
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("breed_name", catResult[0]);
-        result.put("name_zh", catResult[0]);
-        result.put("confidence", 75.0);
-        result.put("description", catResult[1]);
-        result.put("care_tips", catResult[2]);
-        return result;
+        return new PetImageClassifier().predict(imagePath);
     }
 
     @Transactional
@@ -48,7 +40,7 @@ public class AiService {
         if (pet != null) bh.setPet(pet);
         bh.setImagePath(imagePath);
         bh.setRecognizedBreed((String) result.get("breed_name"));
-        bh.setConfidence(((Number) result.get("confidence")).doubleValue());
+        bh.setConfidence(result.get("confidence") instanceof Number score ? score.doubleValue() : null);
         bh.setDescription((String) result.get("description"));
         bh.setCareTips((String) result.get("care_tips"));
         return breedHistoryRepository.save(bh);
@@ -65,7 +57,7 @@ public class AiService {
         eh.setPet(pet);
         eh.setImagePath(imagePath);
         eh.setEmotion((String) result.get("emotion"));
-        eh.setConfidence(((Number) result.get("confidence")).doubleValue());
+        eh.setConfidence(result.get("confidence") instanceof Number score ? score.doubleValue() : null);
         eh.setComfortAdvice((String) result.get("comfort_advice"));
         return emotionHistoryRepository.save(eh);
     }

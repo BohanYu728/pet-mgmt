@@ -11,3 +11,7 @@
 | `frontend/public/images/product-care.jpg` | 宠物梳毛刷；护理用品分类示意 | ZooFari，[Wikimedia Commons: Dog brush.JPG](https://commons.wikimedia.org/wiki/File:Dog_brush.JPG) | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) |
 
 四张 Commons 图片由对应文件页的 `Special:Redirect/file` 下载，宽度参数分别为 1600（犬、玩具、护理）与 1000（狗粮）；因此是 Commons 提供的缩放版本。没有进一步改动像素。页面 CSS 裁切不改变源文件。使用时应保留摄影者、文件页及授权链接；若另行改图，应按相应授权标明修改，ShareAlike 图片的改作还须遵循相同授权。
+
+## 边牧识别样例
+
+`frontend/public/images/border-collie-sample.jpg`：Michelle Buntin，公共领域。来源：https://commons.wikimedia.org/wiki/File:Border_collie_dog.jpg 。用于真实模型回归测试及可操作样例，不是用户上传原图。
